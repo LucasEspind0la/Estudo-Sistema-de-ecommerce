@@ -96,6 +96,34 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+		<!-- API do JWT: contém as interfaces que vamos usar no código -->
+	<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.6</version>
+	</dependency>
+
+<!-- Implementação do JWT: contém a lógica real que roda por trás dos panos -->
+
+	<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.12.6</version>
+    <scope>runtime</scope>
+	</dependency>
+
+<!-- Jackson: permite que o JWT leia e escreva dados em formato JSON -->
+	<dependency>
+
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.12.6</version>
+    <scope>runtime</scope>
+	</dependency>
+
+
 	</dependencies>
 
 	<build>
