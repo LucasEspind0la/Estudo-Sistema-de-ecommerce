@@ -13,18 +13,30 @@
 
 </div>
 
----
+
+--------------------------------------------------------------------------------------------------------------
+
+
 
 ## 📋 Visão Geral do Projeto
+
 
 <table>
 <tr>
 <td width="50%">
 
+
 ### 🎯 Objetivo
 Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), servindo como material de estudo e portfólio profissional.
 
+
+--------------------------------------------------------------------------------------------------------------
+
+
 ### ✨ Destaques Técnicos
+
+
+
 - ✅ Arquitetura em camadas (Controller → Service → Repository)
 - ✅ Autenticação e Autorização com JWT e Spring Security
 - ✅ Criptografia de senhas com BCrypt
@@ -37,7 +49,14 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </td>
 <td width="50%">
 
+
+--------------------------------------------------------------------------------------------------------------
+
+
 ### 🚀 Status do Projeto
+
+
+
 **Backend (Core):** ✅ Completo e Funcional  
 **Segurança (JWT):** ✅ Completo e Funcional  
 **Frontend:** 🚧 Em Desenvolvimento  
@@ -54,7 +73,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
----
+--------------------------------------------------------------------------------------------------------------
 
 ## 🛠️ Stack Tecnológica
 
@@ -125,14 +144,23 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
----
+
+--------------------------------------------------------------------------------------------------------------
+
 
 ## 📡 API Endpoints
 
 > **Nota sobre Autenticação:** Para rotas marcadas com 🔒 **ADMIN**, é obrigatório enviar o cabeçalho:  
 > `Authorization: Bearer <seu_token_jwt_aqui>`
 
+
+--------------------------------------------------------------------------------------------------------------
+
+
 ### 🔐 Autenticação
+
+
+
 <table>
 <tr>
 <th>Método</th>
@@ -154,7 +182,14 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
+
+--------------------------------------------------------------------------------------------------------------
+
+
 ### 📂 Categorias
+
+
+
 <table>
 <tr>
 <th>Método</th>
@@ -194,7 +229,12 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
+
+--------------------------------------------------------------------------------------------------------------
+
 ### 📦 Produtos
+
+
 <table>
 <tr>
 <th>Método</th>
@@ -246,7 +286,10 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
+--------------------------------------------------------------------------------------------------------------
+
 ### 🏷️ Variações de Produtos
+
 <table>
 <tr>
 <th>Método</th>
@@ -280,11 +323,12 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
----
+--------------------------------------------------------------------------------------------------------------
+
 
 ## 📂 Estrutura do Projeto
 
-```text
+
 sistema-vendas/
 ├── backend/
 │   └── api/
@@ -306,3 +350,39 @@ sistema-vendas/
 │       ├── shared/                  # Componentes reutilizáveis
 │       └── features/                # Módulos da aplicação (Auth, Products, etc)
 └── README.md
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+Pré-requisitos
+
+    Java 17+
+    Maven 3.6+
+    PostgreSQL 12+
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+🎯 Funcionalidades Implementadas
+✅ Concluído
+
+    CRUD completo de Categorias, Produtos e Variações
+    Validação de SKU único e integridade referencial
+    Tratamento global de exceções (GlobalExceptionHandler)
+    Migrations de banco de dados com Flyway
+    Configuração de CORS para frontend
+    Arquitetura em camadas bem definida
+    DTOs com Records (Java 14+)
+    Autenticação JWT (Login e Cadastro)
+    Criptografia de senhas com BCrypt
+    Proteção de rotas por perfil (ADMINISTRADOR vs CLIENTE)
+
+🚧 Próximos Passos
+
+    Carrinho de Compras e Sistema de Pedidos
+    Frontend Angular completo (consumindo a API com Interceptors)
+    Upload de imagens de produtos
+    Integração com Gateway de Pagamento (ex: Mercado Pago)
+    Deploy em nuvem (Backend + Frontend + Banco)
