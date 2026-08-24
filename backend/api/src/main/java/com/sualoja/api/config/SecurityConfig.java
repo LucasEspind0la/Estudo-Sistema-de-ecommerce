@@ -32,24 +32,30 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
             // Define as regras de quem pode acessar o quê (O "Porteiro")
-            .authorizeHttpRequests(auth -> auth
-                // Rotas PÚBLICAS: Qualquer um pode acessar
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
-                
-                // Rotas PROTEGIDAS: Só quem tiver papel de ADMINISTRADOR no token pode acessar
-                .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
-                
-                // Qualquer outra rota não listada acima exige que o usuário esteja logado (qualquer papel)
-                .anyRequest().authenticated()
-            )
+           .authorizeHttpRequests(auth -> auth
+            // Rotas públicas
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+    
+           // Rotas protegidas (só ADMIN)
+            .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
+    
+            // NOVAS ROTAS: Carrinho e Pedidos
+            .requestMatchers("/api/carrinho/**").authenticated()
+            .requestMatchers("/api/pedidos/meus-pedidos").authenticated()
+            .requestMatchers("/api/pedidos/finalizar").authenticated()
+            .requestMatchers("/api/pedidos/**").hasRole("ADMINISTRADOR")
+    
+    // Qualquer outra rota exige autenticação
+    .anyRequest().authenticated()
+    )
             // Adiciona o nosso filtro JWT ANTES do filtro padrão de senha do Spring
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
             
