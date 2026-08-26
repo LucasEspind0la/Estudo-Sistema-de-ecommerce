@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -20,31 +22,31 @@ public class ProductController {
 
     private final ProductService productService;
 
-    // POST / -> Cria novo produto (valida payload). Retorna 201 Created.
+    // POST /  Cria novo produto (valida payload). Retorna 201 Created.
     @PostMapping
     public ResponseEntity<ProductResponse> criar(@RequestBody @Valid CreateProductRequest requisicao) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.criar(requisicao));
     }
 
-    // GET / -> Lista todos os produtos. Retorna 200 OK.
+    // GET / Lista todos os produtos. Retorna 200 OK.
     @GetMapping
     public ResponseEntity<List<ProductResponse>> buscarTodos() {
         return ResponseEntity.ok(productService.buscarTodos());
     }
 
-    // GET /ativos -> Lista apenas produtos com status ativo. Retorna 200 OK.
+    // GET /ativos Lista apenas produtos com status ativo. Retorna 200 OK.
     @GetMapping("/ativos")
     public ResponseEntity<List<ProductResponse>> buscarAtivos() {
         return ResponseEntity.ok(productService.buscarAtivos());
     }
 
-    // GET /{id} -> Busca produto específico por ID. Retorna 200 OK.
+    // GET /{id}  Busca produto específico por ID. Retorna 200 OK.
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(productService.buscarPorId(id));
     }
 
-    // PUT /{id} -> Atualiza produto existente (valida payload). Retorna 200 OK.
+    // PUT /{id} Atualiza produto existente (valida payload). Retorna 200 OK.
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> atualizar(
         @PathVariable Long id,
@@ -59,10 +61,20 @@ public class ProductController {
         return ResponseEntity.ok(productService.alternarStatusAtivo(id));
     }
 
-    // DELETE /{id} -> Remove produto por ID. Retorna 204 No Content.
+    // DELETE /{id}  Remove produto por ID. Retorna 204 No Content.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         productService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+        // PUT /{id}/ imagem! Atualiza a imagem do produto, se retornar 200 tudo ok!
+        @PutMapping("/{id}/imagem")
+    public ResponseEntity<ProductResponse> atualizarImagem(
+            @PathVariable Long id,
+            @RequestParam("imagem") MultipartFile arquivo) {
+        
+        ProductResponse produtoAtualizado = productService.atualizarImagem(id, arquivo);
+        return ResponseEntity.ok(produtoAtualizado);
     }
 }

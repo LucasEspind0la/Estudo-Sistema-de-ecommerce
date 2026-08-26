@@ -13,6 +13,7 @@ import com.sualoja.api.repository.ProductVariantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductVariantRepository productVariantRepository;
-
+    private final FileStorageService fileStorageService;
     @Transactional
     public ProductResponse criar(CreateProductRequest requisicao) {
         Category categoria = categoryRepository.findById(requisicao.categoriaId())
@@ -118,4 +119,25 @@ public class ProductService {
         }
         productRepository.deleteById(id);
     }
+    @Transactional
+public ProductResponse atualizarImagem(Long produtoId, MultipartFile arquivo) {
+    // 1. Buscar o produto ou lançar erro 404
+    Product produto = productRepository.findById(produtoId)
+        .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com id: " + produtoId));
+
+    // 2. Se o produto já tinha uma imagem, deletar a antiga
+    if (produto.getImagemUrl() != null && !produto.getImagemUrl().isEmpty()) {
+        fileStorageService.deletarImagem(produto.getImagemUrl());
+    }
+
+    // 3. Salvar a nova imagem e obter o nome do arquivo
+    String nomeArquivo = fileStorageService.salvarImagemProduto(arquivo);
+
+    // 4. Atualizar a URL no produto
+    produto.setImagemUrl(nomeArquivo);
+    Product produtoAtualizado = productRepository.save(produto);
+
+    // 5. Retornar o produto atualizado
+    return ProductResponse.deEntidade(produtoAtualizado);
+}
 }
