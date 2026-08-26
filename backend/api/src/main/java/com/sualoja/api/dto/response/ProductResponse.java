@@ -12,6 +12,7 @@ public record ProductResponse(
     String categoriaNome,
     Boolean ativo,
     Boolean destaque,
+    String imagemUrl,
     List<ProductVariantResponse> variantes,
     LocalDateTime criadoEm,
     LocalDateTime atualizadoEm
@@ -30,6 +31,7 @@ public record ProductResponse(
             produto.getCategoria().getNome(),
             produto.getAtivo(),
             produto.getDestaque(),
+            produto.getImagemUrl(),
             variantesResponse,
             produto.getCriadoEm(),
             produto.getAtualizadoEm()

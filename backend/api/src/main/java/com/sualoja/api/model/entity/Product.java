@@ -35,6 +35,8 @@ public class Product {
 
     @Column(nullable = false)
     private Boolean destaque;
+    @Column(name = "image_url")
+    private String imagemUrl;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
