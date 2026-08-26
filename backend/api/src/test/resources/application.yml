@@ -10,10 +10,15 @@ spring:
     show-sql: false
   flyway:
     enabled: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
 
-# Propriedades do JWT necessárias para os testes de integração
-# Adicione este bloco para os testes de integração funcionarem
 app:
   jwt:
     chave-secreta: minha-chave-super-secreta-que-deve-ser-bem-grande-e-aleatoria-pelo-menos-256-bits-123456
     expiracao-ms: 86400000
+  upload:
+    diretorio: ./uploads
+    subdiretorio-produtos: produtos

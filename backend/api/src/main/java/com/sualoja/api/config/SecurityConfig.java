@@ -37,6 +37,9 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+
+            // Permitir acesso público às imagens dos produtos
+            .requestMatchers("/uploads/**").permitAll()
     
            // Rotas protegidas (só ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")
