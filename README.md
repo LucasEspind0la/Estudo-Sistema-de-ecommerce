@@ -1,5 +1,4 @@
-# Estudo de Sistema de Vendas - API RESTful 
-
+# Estudo de Sistema de Vendas - API RESTful
 
 <div align="center">
 
@@ -9,73 +8,56 @@
 ![JWT](https://img.shields.io/badge/JWT-Security-black?style=for-the-badge&logo=jsonwebtokens)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-**API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT e arquitetura em camadas.**
+API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT e arquitetura em camadas.
 
 </div>
 
-
---------------------------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## 📋 Visão Geral do Projeto
-
+## Visão Geral do Projeto
 
 <table>
 <tr>
 <td width="50%">
 
+### Objetivo
+Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), carrinho de compras e ciclo de pedidos, servindo como material de estudo e portfólio profissional.
 
-### 🎯 Objetivo
-Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), servindo como material de estudo e portfólio profissional.
-
-
---------------------------------------------------------------------------------------------------------------
-
-
-### ✨ Destaques Técnicos
-
-
-
-- ✅ Arquitetura em camadas (Controller → Service → Repository)
-- ✅ Autenticação e Autorização com JWT e Spring Security
-- ✅ Criptografia de senhas com BCrypt
-- ✅ Controle de acesso baseado em funções (RBAC: ADMIN vs CLIENTE)
-- ✅ Validações de negócio e integridade referencial
-- ✅ Tratamento global de exceções
-- ✅ Migrations com Flyway
-- ✅ Padrão DTO com Records (Java 14+)
+### Destaques Técnicos
+- Arquitetura em camadas (Controller → Service → Repository)
+- Autenticação e Autorização com JWT e Spring Security
+- Criptografia de senhas com BCrypt
+- Controle de acesso baseado em funções (RBAC: ADMIN vs CLIENTE)
+- Validações de negócio e integridade referencial (ex: bloqueio de venda sem estoque)
+- Tratamento global de exceções
+- Migrations de banco de dados com Flyway
+- Padrão DTO com Records (Java 14+)
 
 </td>
 <td width="50%">
 
+### Status do Projeto
+- **Backend (Core):** Completo e Funcional
+- **Segurança (JWT):** Completo e Funcional
+- **Carrinho e Pedidos:** Completo e Funcional
+- **Frontend:** Em Desenvolvimento
+- **Deploy:** Planejado
 
---------------------------------------------------------------------------------------------------------------
-
-
-### 🚀 Status do Projeto
-
-
-
-**Backend (Core):** ✅ Completo e Funcional  
-**Segurança (JWT):** ✅ Completo e Funcional  
-**Frontend:** 🚧 Em Desenvolvimento  
-**Carrinho/Pedidos:** 📋 Planejado  
-**Deploy:** 📋 Planejado
-
-### 📊 Métricas
-- **Entidades:** 4 (User, Category, Product, ProductVariant)
-- **Endpoints:** 20+ rotas RESTful protegidas e públicas
-- **Cobertura:** CRUD completo com regras de negócio
+### Métricas
+- **Entidades:** 8 (User, Category, Product, ProductVariant, Cart, CartItem, Order, OrderItem)
+- **Endpoints:** 30+ rotas RESTful protegidas e públicas
+- **Cobertura:** CRUD completo, fluxo de checkout e baixa automática de estoque
 - **Banco:** PostgreSQL com migrations versionadas
 
 </td>
 </tr>
 </table>
 
---------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## 🛠️ Stack Tecnológica
+
+## Stack Tecnológica
 
 <table>
 <tr>
@@ -144,191 +126,70 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------------------------
 
+## API Endpoints
 
-## 📡 API Endpoints
-
-> **Nota sobre Autenticação:** Para rotas marcadas com 🔒 **ADMIN**, é obrigatório enviar o cabeçalho:  
+> **Nota sobre Autenticação:** Para rotas marcadas como **ADMIN**, é obrigatório enviar o cabeçalho:  
 > `Authorization: Bearer <seu_token_jwt_aqui>`
 
+### Autenticação
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `POST` | `/api/auth/cadastrar` | Cadastrar novo usuário (Admin ou Cliente) | Público |
+| `POST` | `/api/auth/login` | Autenticar e receber token JWT | Público |
 
---------------------------------------------------------------------------------------------------------------
+### Categorias
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `GET` | `/api/categorias` | Listar todas as categorias | Público |
+| `GET` | `/api/categorias/{id}` | Buscar categoria por ID | Público |
+| `POST` | `/api/categorias` | Criar nova categoria | ADMIN |
+| `PUT` | `/api/categorias/{id}` | Atualizar categoria | ADMIN |
+| `DELETE` | `/api/categorias/{id}` | Deletar categoria | ADMIN |
 
+### Produtos
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `GET` | `/api/produtos` | Listar todos os produtos | Público |
+| `GET` | `/api/produtos/ativos` | Listar apenas produtos ativos | Público |
+| `GET` | `/api/produtos/{id}` | Buscar produto com suas variações | Público |
+| `POST` | `/api/produtos` | Criar produto com variações | ADMIN |
+| `PUT` | `/api/produtos/{id}` | Atualizar dados do produto | ADMIN |
+| `PATCH` | `/api/produtos/{id}/alternar-ativo` | Ativar/Desativar produto | ADMIN |
+| `DELETE` | `/api/produtos/{id}` | Deletar produto | ADMIN |
 
-### 🔐 Autenticação
+### Variações de Produtos
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `GET` | `/api/produtos/{id}/variacoes` | Listar variações de um produto | Público |
+| `POST` | `/api/produtos/{id}/variacoes` | Adicionar variação a um produto | ADMIN |
+| `PUT` | `/api/produtos/{idProduto}/variacoes/{idVariacao}` | Atualizar variação (preço, estoque, etc) | ADMIN |
+| `DELETE` | `/api/produtos/{idProduto}/variacoes/{idVariacao}` | Deletar variação | ADMIN |
 
+### Carrinho de Compras
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `GET` | `/api/carrinho` | Obter carrinho do usuário logado | Autenticado |
+| `POST` | `/api/carrinho/adicionar` | Adicionar item ao carrinho (com validação de estoque) | Autenticado |
+| `PUT` | `/api/carrinho/itens/{itemId}` | Atualizar quantidade de um item | Autenticado |
+| `DELETE` | `/api/carrinho/itens/{itemId}` | Remover item do carrinho | Autenticado |
+| `DELETE` | `/api/carrinho/limpar` | Esvaziar carrinho completo | Autenticado |
 
+### Pedidos
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `POST` | `/api/pedidos/finalizar` | Finalizar compra (Checkout com baixa de estoque) | Autenticado |
+| `GET` | `/api/pedidos/meus-pedidos` | Listar histórico de pedidos do usuário | Autenticado |
+| `GET` | `/api/pedidos/{pedidoId}` | Buscar detalhes de um pedido específico | Autenticado |
+| `PATCH` | `/api/pedidos/{pedidoId}/status` | Alterar status do pedido (ex: PENDENTE para PAGO) | ADMIN |
 
-<table>
-<tr>
-<th>Método</th>
-<th>Endpoint</th>
-<th>Descrição</th>
-<th>Acesso</th>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/auth/cadastrar</code></td>
-<td>Cadastrar novo usuário (Admin ou Cliente)</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/auth/login</code></td>
-<td>Autenticar e receber token JWT</td>
-<td>🌐 Público</td>
-</tr>
-</table>
+---
 
+## Estrutura do Projeto
 
---------------------------------------------------------------------------------------------------------------
-
-
-### 📂 Categorias
-
-
-
-<table>
-<tr>
-<th>Método</th>
-<th>Endpoint</th>
-<th>Descrição</th>
-<th>Acesso</th>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/categorias</code></td>
-<td>Listar todas as categorias</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/categorias/{id}</code></td>
-<td>Buscar categoria por ID</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/categorias</code></td>
-<td>Criar nova categoria</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>PUT</code></td>
-<td><code>/api/categorias/{id}</code></td>
-<td>Atualizar categoria</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>DELETE</code></td>
-<td><code>/api/categorias/{id}</code></td>
-<td>Deletar categoria</td>
-<td>🔒 ADMIN</td>
-</tr>
-</table>
-
-
---------------------------------------------------------------------------------------------------------------
-
-### 📦 Produtos
-
-
-<table>
-<tr>
-<th>Método</th>
-<th>Endpoint</th>
-<th>Descrição</th>
-<th>Acesso</th>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/produtos</code></td>
-<td>Listar todos os produtos</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/produtos/ativos</code></td>
-<td>Listar apenas produtos ativos</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/produtos/{id}</code></td>
-<td>Buscar produto com suas variações</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/produtos</code></td>
-<td>Criar produto com variações</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>PUT</code></td>
-<td><code>/api/produtos/{id}</code></td>
-<td>Atualizar dados do produto</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>PATCH</code></td>
-<td><code>/api/produtos/{id}/alternar-ativo</code></td>
-<td>Ativar/Desativar produto</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>DELETE</code></td>
-<td><code>/api/produtos/{id}</code></td>
-<td>Deletar produto</td>
-<td>🔒 ADMIN</td>
-</tr>
-</table>
-
---------------------------------------------------------------------------------------------------------------
-
-### 🏷️ Variações de Produtos
-
-<table>
-<tr>
-<th>Método</th>
-<th>Endpoint</th>
-<th>Descrição</th>
-<th>Acesso</th>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/api/produtos/{id}/variacoes</code></td>
-<td>Listar variações de um produto</td>
-<td>🌐 Público</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/api/produtos/{id}/variacoes</code></td>
-<td>Adicionar variação a um produto</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>PUT</code></td>
-<td><code>/api/produtos/{idProduto}/variacoes/{idVariacao}</code></td>
-<td>Atualizar variação (preço, estoque, etc)</td>
-<td>🔒 ADMIN</td>
-</tr>
-<tr>
-<td><code>DELETE</code></td>
-<td><code>/api/produtos/{idProduto}/variacoes/{idVariacao}</code></td>
-<td>Deletar variação</td>
-<td>🔒 ADMIN</td>
-</tr>
-</table>
-
---------------------------------------------------------------------------------------------------------------
-
-
-## 📂 Estrutura do Projeto
-
-
+```text
 sistema-vendas/
 ├── backend/
 │   └── api/
@@ -340,7 +201,7 @@ sistema-vendas/
 │       │   ├── model/               # Entidades JPA e Enums
 │       │   ├── repository/          # Interfaces Spring Data JPA
 │       │   ├── security/            # Filtro JWT e UserDetailsService
-│       │   └── service/             # Regras de negócio
+│       │   └── service/             # Regras de negócio (inclui Cart e Order)
 │       └── src/main/resources/
 │           ├── application.yml      # Configuração da aplicação
 │           └── db/migration/        # Scripts de versionamento Flyway
@@ -348,12 +209,11 @@ sistema-vendas/
 │   └── src/app/
 │       ├── core/                    # Serviços, guards, interceptors
 │       ├── shared/                  # Componentes reutilizáveis
-│       └── features/                # Módulos da aplicação (Auth, Products, etc)
+│       └── features/                # Módulos da aplicação (Auth, Products, Cart, etc)
 └── README.md
 
 
---------------------------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Pré-requisitos
 
@@ -362,11 +222,12 @@ Pré-requisitos
     PostgreSQL 12+
 
 
---------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-🎯 Funcionalidades Implementadas
-✅ Concluído
+
+Funcionalidades Implementadas
+Concluído
 
     CRUD completo de Categorias, Produtos e Variações
     Validação de SKU único e integridade referencial
@@ -378,11 +239,14 @@ Pré-requisitos
     Autenticação JWT (Login e Cadastro)
     Criptografia de senhas com BCrypt
     Proteção de rotas por perfil (ADMINISTRADOR vs CLIENTE)
+    Carrinho de compras com cálculo automático de subtotal e total
+    Sistema de pedidos com baixa automática e transacional de estoque
+    Validação de estoque em tempo real (impede venda de itens esgotados)
 
-🚧 Próximos Passos
+Próximos Passos
 
-    Carrinho de Compras e Sistema de Pedidos
     Frontend Angular completo (consumindo a API com Interceptors)
     Upload de imagens de produtos
     Integração com Gateway de Pagamento (ex: Mercado Pago)
     Deploy em nuvem (Backend + Frontend + Banco)
+    
