@@ -6,14 +6,14 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.x-brightgreen?style=for-the-badge&logo=spring)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue?style=for-the-badge&logo=postgresql)
 ![JWT](https://img.shields.io/badge/JWT-Security-black?style=for-the-badge&logo=jsonwebtokens)
+![Testes](https://img.shields.io/badge/Testes-JUnit%20%26%20Mockito-yellow?style=for-the-badge&logo=junit5)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT e arquitetura em camadas.
+API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT, testes automatizados e arquitetura em camadas.
 
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 ## Visão Geral do Projeto
 
@@ -22,7 +22,7 @@ API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com 
 <td width="50%">
 
 ### Objetivo
-Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), carrinho de compras e ciclo de pedidos, servindo como material de estudo e portfólio profissional.
+Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), carrinho de compras, ciclo de pedidos e upload de imagens, servindo como material de estudo e portfólio profissional.
 
 ### Destaques Técnicos
 - Arquitetura em camadas (Controller → Service → Repository)
@@ -33,6 +33,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 - Tratamento global de exceções
 - Migrations de banco de dados com Flyway
 - Padrão DTO com Records (Java 14+)
+- **Testes automatizados** (Unitários e de Integração)
 
 </td>
 <td width="50%">
@@ -41,14 +42,16 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 - **Backend (Core):** Completo e Funcional
 - **Segurança (JWT):** Completo e Funcional
 - **Carrinho e Pedidos:** Completo e Funcional
-- **Frontend:** Em Desenvolvimento
+- **Upload de Imagens:** Completo e Funcional
+- **Testes Automatizados:** Completo e Funcional
+- **Frontend:** Em Planejamento
 - **Deploy:** Planejado
 
 ### Métricas
 - **Entidades:** 8 (User, Category, Product, ProductVariant, Cart, CartItem, Order, OrderItem)
 - **Endpoints:** 30+ rotas RESTful protegidas e públicas
-- **Cobertura:** CRUD completo, fluxo de checkout e baixa automática de estoque
-- **Banco:** PostgreSQL com migrations versionadas
+- **Cobertura:** CRUD completo, fluxo de checkout, baixa automática de estoque e upload de arquivos
+- **Banco:** PostgreSQL com migrations versionadas (Flyway)
 
 </td>
 </tr>
@@ -67,7 +70,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <th>Propósito</th>
 </tr>
 <tr>
-<td rowspan="5"><strong>Backend</strong></td>
+<td rowspan="6"><strong>Backend</strong></td>
 <td>Java</td>
 <td>17 LTS</td>
 <td>Linguagem principal</td>
@@ -93,6 +96,11 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td>Hashing seguro de senhas</td>
 </tr>
 <tr>
+<td>Multipart File</td>
+<td>Nativo</td>
+<td>Upload e validação de arquivos</td>
+</tr>
+<tr>
 <td rowspan="3"><strong>Banco de Dados</strong></td>
 <td>PostgreSQL</td>
 <td>12+</td>
@@ -107,6 +115,22 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td>Hibernate</td>
 <td>6.x</td>
 <td>ORM e mapeamento objeto-relacional</td>
+</tr>
+<tr>
+<td rowspan="3"><strong>Testes</strong></td>
+<td>JUnit 5</td>
+<td>5.x</td>
+<td>Framework de testes</td>
+</tr>
+<tr>
+<td>Mockito</td>
+<td>5.x</td>
+<td>Mocking para testes unitários</td>
+</tr>
+<tr>
+<td>H2 Database</td>
+<td>2.x</td>
+<td>Banco em memória para testes de integração</td>
 </tr>
 <tr>
 <td rowspan="3"><strong>Ferramentas</strong></td>
@@ -131,7 +155,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 
 ## API Endpoints
 
-> **Nota sobre Autenticação:** Para rotas marcadas como **ADMIN**, é obrigatório enviar o cabeçalho:  
+> **Nota sobre Autenticação:** Para rotas marcadas como **ADMIN** ou **Autenticado**, é obrigatório enviar o cabeçalho:  
 > `Authorization: Bearer <seu_token_jwt_aqui>`
 
 ### Autenticação
@@ -157,6 +181,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 | `GET` | `/api/produtos/{id}` | Buscar produto com suas variações | Público |
 | `POST` | `/api/produtos` | Criar produto com variações | ADMIN |
 | `PUT` | `/api/produtos/{id}` | Atualizar dados do produto | ADMIN |
+| `PUT` | `/api/produtos/{id}/imagem` | **Upload de imagem do produto** | ADMIN |
 | `PATCH` | `/api/produtos/{id}/alternar-ativo` | Ativar/Desativar produto | ADMIN |
 | `DELETE` | `/api/produtos/{id}` | Deletar produto | ADMIN |
 
@@ -185,7 +210,10 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 | `GET` | `/api/pedidos/{pedidoId}` | Buscar detalhes de um pedido específico | Autenticado |
 | `PATCH` | `/api/pedidos/{pedidoId}/status` | Alterar status do pedido (ex: PENDENTE para PAGO) | ADMIN |
 
----
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 ## Estrutura do Projeto
 
@@ -194,18 +222,20 @@ sistema-vendas/
 ├── backend/
 │   └── api/
 │       ├── src/main/java/com/sualoja/api/
-│       │   ├── config/              # Configurações (CORS, Security, JWT)
+│       │   ├── config/              # Configurações (CORS, Security, JWT, WebMVC)
 │       │   ├── controller/          # Endpoints REST
 │       │   ├── dto/                 # Data Transfer Objects (Request/Response)
 │       │   ├── exception/           # Tratamento global de erros
 │       │   ├── model/               # Entidades JPA e Enums
 │       │   ├── repository/          # Interfaces Spring Data JPA
 │       │   ├── security/            # Filtro JWT e UserDetailsService
-│       │   └── service/             # Regras de negócio (inclui Cart e Order)
-│       └── src/main/resources/
-│           ├── application.yml      # Configuração da aplicação
-│           └── db/migration/        # Scripts de versionamento Flyway
-├── frontend/                        # (Em desenvolvimento)
+│       │   └── service/             # Regras de negócio (inclui FileStorage, Cart e Order)
+│       ├── src/main/resources/
+│       │   ├── application.yml      # Configuração da aplicação
+│       │   └── db/migration/        # Scripts de versionamento Flyway
+│       ├── src/test/                # Testes automatizados (JUnit 5, Mockito, H2)
+│       └── uploads/                 # Diretório local para armazenamento de imagens
+├── frontend/                        # (Em planejamento)
 │   └── src/app/
 │       ├── core/                    # Serviços, guards, interceptors
 │       ├── shared/                  # Componentes reutilizáveis
@@ -213,7 +243,10 @@ sistema-vendas/
 └── README.md
 
 
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 Pré-requisitos
 
@@ -223,7 +256,6 @@ Pré-requisitos
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 
 Funcionalidades Implementadas
@@ -242,11 +274,14 @@ Concluído
     Carrinho de compras com cálculo automático de subtotal e total
     Sistema de pedidos com baixa automática e transacional de estoque
     Validação de estoque em tempo real (impede venda de itens esgotados)
+    Upload de imagens de produtos com validação de tipo, tamanho e nomeação única (UUID)
+    Suite de testes automatizados (Unitários com Mockito e de Integração com H2)
 
 Próximos Passos
 
+    Documentação da API com Swagger/OpenAPI (SpringDoc)
     Frontend Angular completo (consumindo a API com Interceptors)
-    Upload de imagens de produtos
-    Integração com Gateway de Pagamento (ex: Mercado Pago)
+    Integração com Gateway de Pagamento (ex: Mercado Pago ou Stripe)
     Deploy em nuvem (Backend + Frontend + Banco)
+
     
