@@ -6,52 +6,55 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.x-brightgreen?style=for-the-badge&logo=spring)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue?style=for-the-badge&logo=postgresql)
 ![JWT](https://img.shields.io/badge/JWT-Security-black?style=for-the-badge&logo=jsonwebtokens)
+![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge&logo=swagger)
 ![Testes](https://img.shields.io/badge/Testes-JUnit%20%26%20Mockito-yellow?style=for-the-badge&logo=junit5)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT, testes automatizados e arquitetura em camadas.
+API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT, testes automatizados, documentação interativa e arquitetura em camadas.
 
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Visão Geral do Projeto
+## 📖 Visão Geral do Projeto
 
 <table>
 <tr>
 <td width="50%">
 
-### Objetivo
-Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), carrinho de compras, ciclo de pedidos e upload de imagens, servindo como material de estudo e portfólio profissional.
+### 🎯 Objetivo
+Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), carrinho de compras, ciclo de pedidos e upload de imagens, servindo como material de estudo avançado e portfólio profissional.
 
-### Destaques Técnicos
+### ✨ Destaques Técnicos
 - Arquitetura em camadas (Controller → Service → Repository)
 - Autenticação e Autorização com JWT e Spring Security
 - Criptografia de senhas com BCrypt
-- Controle de acesso baseado em funções (RBAC: ADMIN vs CLIENTE)
+- Controle de acesso baseado em funções (RBAC: ADMINISTRADOR vs CLIENTE)
 - Validações de negócio e integridade referencial (ex: bloqueio de venda sem estoque)
-- Tratamento global de exceções
-- Migrations de banco de dados com Flyway
+- Tratamento global de exceções padronizado
+- Migrations de banco de dados versionadas com Flyway
 - Padrão DTO com Records (Java 14+)
-- **Testes automatizados** (Unitários e de Integração)
+- **Documentação interativa com Swagger/OpenAPI**
+- **Suite de testes automatizados (Unitários e de Integração)**
 
 </td>
 <td width="50%">
 
-### Status do Projeto
-- **Backend (Core):** Completo e Funcional
-- **Segurança (JWT):** Completo e Funcional
-- **Carrinho e Pedidos:** Completo e Funcional
-- **Upload de Imagens:** Completo e Funcional
-- **Testes Automatizados:** Completo e Funcional
-- **Frontend:** Em Planejamento
-- **Deploy:** Planejado
+### 🚦 Status do Projeto
+- **Backend (Core):** ✅ Completo e Funcional
+- **Segurança (JWT):** ✅ Completo e Funcional
+- **Carrinho e Pedidos:** ✅ Completo e Funcional
+- **Upload de Imagens:** ✅ Completo e Funcional
+- **Testes Automatizados:** ✅ Completo e Funcional
+- **Documentação (Swagger):** ✅ Completo e Funcional
+- **Frontend:** 🚧 Em Planejamento
+- **Deploy:** 🚧 Planejado
 
-### Métricas
+### 📊 Métricas
 - **Entidades:** 8 (User, Category, Product, ProductVariant, Cart, CartItem, Order, OrderItem)
 - **Endpoints:** 30+ rotas RESTful protegidas e públicas
 - **Cobertura:** CRUD completo, fluxo de checkout, baixa automática de estoque e upload de arquivos
-- **Banco:** PostgreSQL com migrations versionadas (Flyway)
+- **Banco:** PostgreSQL com migrations versionadas (Flyway) + H2 para testes
 
 </td>
 </tr>
@@ -59,8 +62,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-## Stack Tecnológica
+## 🛠️ Stack Tecnológica
 
 <table>
 <tr>
@@ -104,7 +106,12 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td rowspan="3"><strong>Banco de Dados</strong></td>
 <td>PostgreSQL</td>
 <td>12+</td>
-<td>SGBD principal</td>
+<td>SGBD principal (Produção/Dev)</td>
+</tr>
+<tr>
+<td>H2 Database</td>
+<td>2.x</td>
+<td>Banco em memória para testes automatizados</td>
 </tr>
 <tr>
 <td>Flyway</td>
@@ -112,25 +119,15 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td>Versionamento de schema</td>
 </tr>
 <tr>
-<td>Hibernate</td>
-<td>6.x</td>
-<td>ORM e mapeamento objeto-relacional</td>
-</tr>
-<tr>
-<td rowspan="3"><strong>Testes</strong></td>
-<td>JUnit 5</td>
+<td rowspan="2"><strong>Testes</strong></td>
+<td>JUnit 5 + Mockito</td>
 <td>5.x</td>
-<td>Framework de testes</td>
+<td>Testes unitários e de integração</td>
 </tr>
 <tr>
-<td>Mockito</td>
-<td>5.x</td>
-<td>Mocking para testes unitários</td>
-</tr>
-<tr>
-<td>H2 Database</td>
-<td>2.x</td>
-<td>Banco em memória para testes de integração</td>
+<td>Spring Boot Test</td>
+<td>3.3.x</td>
+<td>Contexto de teste integrado</td>
 </tr>
 <tr>
 <td rowspan="3"><strong>Ferramentas</strong></td>
@@ -153,25 +150,17 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-## API Endpoints
+## 🌐 API Endpoints e Documentação
 
-> **Nota sobre Autenticação:** Para rotas marcadas como **ADMIN** ou **Autenticado**, é obrigatório enviar o cabeçalho:  
-> `Authorization: Bearer <seu_token_jwt_aqui>`
+> **💡 Dica Profissional:** A documentação interativa completa está disponível em:  
+> 👉 `http://localhost:8080/swagger-ui/index.html`  
+> *(Use o botão "Authorize" no topo direito para inserir seu token JWT: `Bearer <seu_token>`)*
 
 ### Autenticação
 | Método | Endpoint | Descrição | Acesso |
 |--------|----------|-----------|--------|
-| `POST` | `/api/auth/cadastrar` | Cadastrar novo usuário (Admin ou Cliente) | Público |
+| `POST` | `/api/auth/cadastrar` | Cadastrar novo usuário | Público |
 | `POST` | `/api/auth/login` | Autenticar e receber token JWT | Público |
-
-### Categorias
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `GET` | `/api/categorias` | Listar todas as categorias | Público |
-| `GET` | `/api/categorias/{id}` | Buscar categoria por ID | Público |
-| `POST` | `/api/categorias` | Criar nova categoria | ADMIN |
-| `PUT` | `/api/categorias/{id}` | Atualizar categoria | ADMIN |
-| `DELETE` | `/api/categorias/{id}` | Deletar categoria | ADMIN |
 
 ### Produtos
 | Método | Endpoint | Descrição | Acesso |
@@ -185,81 +174,51 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 | `PATCH` | `/api/produtos/{id}/alternar-ativo` | Ativar/Desativar produto | ADMIN |
 | `DELETE` | `/api/produtos/{id}` | Deletar produto | ADMIN |
 
-### Variações de Produtos
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `GET` | `/api/produtos/{id}/variacoes` | Listar variações de um produto | Público |
-| `POST` | `/api/produtos/{id}/variacoes` | Adicionar variação a um produto | ADMIN |
-| `PUT` | `/api/produtos/{idProduto}/variacoes/{idVariacao}` | Atualizar variação (preço, estoque, etc) | ADMIN |
-| `DELETE` | `/api/produtos/{idProduto}/variacoes/{idVariacao}` | Deletar variação | ADMIN |
-
-### Carrinho de Compras
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `GET` | `/api/carrinho` | Obter carrinho do usuário logado | Autenticado |
-| `POST` | `/api/carrinho/adicionar` | Adicionar item ao carrinho (com validação de estoque) | Autenticado |
-| `PUT` | `/api/carrinho/itens/{itemId}` | Atualizar quantidade de um item | Autenticado |
-| `DELETE` | `/api/carrinho/itens/{itemId}` | Remover item do carrinho | Autenticado |
-| `DELETE` | `/api/carrinho/limpar` | Esvaziar carrinho completo | Autenticado |
-
-### Pedidos
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `POST` | `/api/pedidos/finalizar` | Finalizar compra (Checkout com baixa de estoque) | Autenticado |
-| `GET` | `/api/pedidos/meus-pedidos` | Listar histórico de pedidos do usuário | Autenticado |
-| `GET` | `/api/pedidos/{pedidoId}` | Buscar detalhes de um pedido específico | Autenticado |
-| `PATCH` | `/api/pedidos/{pedidoId}/status` | Alterar status do pedido (ex: PENDENTE para PAGO) | ADMIN |
-
+*(Demais endpoints de Categorias, Carrinho e Pedidos estão detalhados na documentação Swagger)*
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-## Estrutura do Projeto
+## 📂 Estrutura do Projeto
 
 ```text
 sistema-vendas/
 ├── backend/
 │   └── api/
 │       ├── src/main/java/com/sualoja/api/
-│       │   ├── config/              # Configurações (CORS, Security, JWT, WebMVC)
+│       │   ├── config/              # Configurações (CORS, Security, JWT, OpenAPI)
 │       │   ├── controller/          # Endpoints REST
 │       │   ├── dto/                 # Data Transfer Objects (Request/Response)
 │       │   ├── exception/           # Tratamento global de erros
 │       │   ├── model/               # Entidades JPA e Enums
 │       │   ├── repository/          # Interfaces Spring Data JPA
 │       │   ├── security/            # Filtro JWT e UserDetailsService
-│       │   └── service/             # Regras de negócio (inclui FileStorage, Cart e Order)
+│       │   └── service/             # Regras de negócio (inclui FileStorage, Cart, Order)
 │       ├── src/main/resources/
-│       │   ├── application.yml      # Configuração da aplicação
+│       │   ├── application.yml      # Configuração da aplicação (PostgreSQL)
 │       │   └── db/migration/        # Scripts de versionamento Flyway
 │       ├── src/test/                # Testes automatizados (JUnit 5, Mockito, H2)
 │       └── uploads/                 # Diretório local para armazenamento de imagens
-├── frontend/                        # (Em planejamento)
-│   └── src/app/
-│       ├── core/                    # Serviços, guards, interceptors
-│       ├── shared/                  # Componentes reutilizáveis
-│       └── features/                # Módulos da aplicação (Auth, Products, Cart, etc)
+├── frontend/                        # 🚧 Em planejamento
 └── README.md
 
 
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-Pré-requisitos
+⚙️ Pré-requisitos
 
     Java 17+
     Maven 3.6+
     PostgreSQL 12+
 
+🚀 Como Executar
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+    Clone o repositório: git clone https://github.com/LucasEspind0la/Estudo-Sistema-de-e-commerce-.git
+    Configure o banco de dados PostgreSQL no application.yml.
+    Execute as migrations (o Flyway roda automaticamente).
+    Inicie a aplicação: mvn spring-boot:run
+    Acesse a documentação: http://localhost:8080/swagger-ui/index.html
 
-
-Funcionalidades Implementadas
-Concluído
+✅ Funcionalidades Implementadas
 
     CRUD completo de Categorias, Produtos e Variações
     Validação de SKU único e integridade referencial
@@ -276,12 +235,5 @@ Concluído
     Validação de estoque em tempo real (impede venda de itens esgotados)
     Upload de imagens de produtos com validação de tipo, tamanho e nomeação única (UUID)
     Suite de testes automatizados (Unitários com Mockito e de Integração com H2)
+    Documentação interativa da API com Swagger/OpenAPI (SpringDoc)
 
-Próximos Passos
-
-    Documentação da API com Swagger/OpenAPI (SpringDoc)
-    Frontend Angular completo (consumindo a API com Interceptors)
-    Integração com Gateway de Pagamento (ex: Mercado Pago ou Stripe)
-    Deploy em nuvem (Backend + Frontend + Banco)
-
-    
