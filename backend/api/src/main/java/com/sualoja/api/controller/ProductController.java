@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
@@ -18,11 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/produtos")
 @RequiredArgsConstructor
+@Tag(name = "Produtos", description = "Endpoints para gerenciamento de produtos") // <-- AQUI É O LUGAR CERTO
 public class ProductController {
 
+    
     private final ProductService productService;
-
+    
     // POST /  Cria novo produto (valida payload). Retorna 201 Created.
+    
     @PostMapping
     public ResponseEntity<ProductResponse> criar(@RequestBody @Valid CreateProductRequest requisicao) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.criar(requisicao));

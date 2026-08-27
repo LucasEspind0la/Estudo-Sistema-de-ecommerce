@@ -40,6 +40,11 @@ public class SecurityConfig {
 
             // Permitir acesso público às imagens dos produtos
             .requestMatchers("/uploads/**").permitAll()
+
+            // Liberar acesso público à documentação Swagger
+            .requestMatchers("/v3/api-docs/**").permitAll()
+            .requestMatchers("/swagger-ui/**").permitAll()
+            .requestMatchers("/swagger-ui.html").permitAll()
     
            // Rotas protegidas (só ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")

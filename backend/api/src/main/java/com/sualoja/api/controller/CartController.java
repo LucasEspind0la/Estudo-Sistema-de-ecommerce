@@ -5,6 +5,8 @@ import com.sualoja.api.dto.request.UpdateCartItemRequest;
 import com.sualoja.api.dto.response.CartResponse;
 import com.sualoja.api.model.entity.User;
 import com.sualoja.api.service.CartService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/carrinho")
 @RequiredArgsConstructor
+@Tag(name = "Carrinho", description = "Endpoints para gerenciamento do carrinho de compras")
 public class CartController {
 
     private final CartService cartService;

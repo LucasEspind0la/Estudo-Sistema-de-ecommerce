@@ -4,6 +4,8 @@ import com.sualoja.api.dto.request.CadastroRequest;
 import com.sualoja.api.dto.request.LoginRequest;
 import com.sualoja.api.dto.response.AuthResponse;
 import com.sualoja.api.service.AuthService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Autenticação", description = "Endpoints para login e cadastro")
 public class AuthController {
 
     private final AuthService authService;

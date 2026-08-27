@@ -4,6 +4,8 @@ import com.sualoja.api.dto.response.OrderResponse;
 import com.sualoja.api.model.entity.User;
 import com.sualoja.api.model.enums.OrderStatus;
 import com.sualoja.api.service.OrderService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pedidos")
 @RequiredArgsConstructor
+@Tag(name = "Pedidos", description = "Endpoints para gerenciamento de pedidos")
 public class OrderController {
 
     private final OrderService orderService;

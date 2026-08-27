@@ -4,6 +4,8 @@ import com.sualoja.api.dto.request.CreateCategoryRequest;
 import com.sualoja.api.dto.request.UpdateCategoryRequest;
 import com.sualoja.api.dto.response.CategoryResponse;
 import com.sualoja.api.service.CategoryService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categorias")
 @RequiredArgsConstructor
+@Tag(name = "Categorias", description = "Endpoints para gerenciamento de categorias")
 public class CategoryController {
 
     private final CategoryService categoryService;
