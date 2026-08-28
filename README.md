@@ -14,8 +14,7 @@ API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com 
 
 </div>
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 📖 Visão Geral do Projeto
 
@@ -32,7 +31,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 - Criptografia de senhas com BCrypt
 - Controle de acesso baseado em funções (RBAC: ADMINISTRADOR vs CLIENTE)
 - Validações de negócio e integridade referencial (ex: bloqueio de venda sem estoque)
-- Tratamento global de exceções padronizado
+- Tratamento global de exceções padronizado (401/403)
 - Migrations de banco de dados versionadas com Flyway
 - Padrão DTO com Records (Java 14+)
 - **Documentação interativa com Swagger/OpenAPI**
@@ -46,7 +45,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 - **Segurança (JWT):** ✅ Completo e Funcional
 - **Carrinho e Pedidos:** ✅ Completo e Funcional
 - **Upload de Imagens:** ✅ Completo e Funcional
-- **Testes Automatizados:** ✅ Completo e Funcional
+- **Testes Automatizados:** ✅ Completo e Funcional (12 testes)
 - **Documentação (Swagger):** ✅ Completo e Funcional
 - **Frontend:** 🚧 Em Planejamento
 - **Deploy:** 🚧 Planejado
@@ -54,15 +53,14 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 ### 📊 Métricas
 - **Entidades:** 8 (User, Category, Product, ProductVariant, Cart, CartItem, Order, OrderItem)
 - **Endpoints:** 30+ rotas RESTful protegidas e públicas
-- **Testes:** 8 testes automatizados (unitários + integração)
+- **Testes:** 12 testes automatizados (unitários + integração de rotas e segurança)
 - **Banco:** PostgreSQL com migrations versionadas (Flyway) + H2 para testes isolados
 
 </td>
 </tr>
 </table>
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 🛠️ Stack Tecnológica
 
@@ -149,8 +147,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 🌐 API Endpoints e Documentação
 
@@ -202,16 +199,21 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 | `GET` | `/api/pedidos/{pedidoId}` | Buscar detalhes de um pedido específico | Autenticado |
 | `PATCH` | `/api/pedidos/{pedidoId}/status` | Alterar status do pedido | ADMIN |
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 ## 🧪 Testes Automatizados
 
-O projeto possui **8 testes automatizados** divididos em 3 categorias:
+O projeto possui **12 testes automatizados** divididos em 3 categorias:
 
 ### Testes Unitários (Lógica de Negócio Isolada)
 - `OrderServiceTest`: Valida regras de negócio do pedido com Mockito
 
 ### Testes de Integração de Rotas (Ponta a Ponta com MockMvc)
+- `AuthIntegrationTest`: Testa login, credenciais inválidas e validação de acesso (401/403)
 - `ProductIntegrationTest`: Testa criação de produtos, erros de validação e upload de imagens
 - `CartIntegrationTest`: Testa adição ao carrinho e validação de estoque
 - `OrderIntegrationTest`: Testa fluxo completo de finalização de pedido com baixa de estoque
@@ -223,9 +225,11 @@ O projeto possui **8 testes automatizados** divididos em 3 categorias:
 ```bash
 mvn clean test
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-📂 Estrutura do Projeto
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+📂 Estrutura do Projet
 
 sistema-vendas/
 ├── backend/
@@ -247,16 +251,19 @@ sistema-vendas/
 ├── frontend/                        # 🚧 Em planejamento
 └── README.md
 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 ⚙️ Pré-requisitos
 
     Java 17+
     Maven 3.6+
     PostgreSQL 12+
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    ✅ Funcionalidades Implementadas
+✅ Funcionalidades Implementadas
 
     CRUD completo de Categorias, Produtos e Variações
     Validação de SKU único e integridade referencial
@@ -268,9 +275,18 @@ sistema-vendas/
     Autenticação JWT (Login e Cadastro)
     Criptografia de senhas com BCrypt
     Proteção de rotas por perfil (ADMINISTRADOR vs CLIENTE)
+    Tratamento correto de erros de segurança (401 Unauthorized / 403 Forbidden)
     Carrinho de compras com cálculo automático de subtotal e total
     Sistema de pedidos com baixa automática e transacional de estoque
     Validação de estoque em tempo real (impede venda de itens esgotados)
     Upload de imagens de produtos com validação de tipo, tamanho e nomeação única (UUID)
-    Suite de testes automatizados (Unitários com Mockito e de Integração com H2/MockMvc)
+    Suite de testes automatizados (12 testes: Unitários com Mockito e de Integração com H2/MockMvc)
     Documentação interativa da API com Swagger/OpenAPI (SpringDoc)
+
+🔜 Próximos Passos
+
+    Frontend Angular completo (consumindo a API com Interceptors)
+    Integração com Gateway de Pagamento (ex: Mercado Pago ou Stripe)
+    Deploy em nuvem (Backend + Frontend + Banco)
+    CI/CD com GitHub Actions
+    
