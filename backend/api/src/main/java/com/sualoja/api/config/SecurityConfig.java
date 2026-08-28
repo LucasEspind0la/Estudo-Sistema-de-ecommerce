@@ -1,6 +1,8 @@
 package com.sualoja.api.config;
 
 import com.sualoja.api.security.JwtAuthenticationFilter;
+
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,42 +30,48 @@ public class SecurityConfig {
             // Desativa CSRF, pois APIs REST com JWT não usam cookies de sessão
             .csrf(csrf -> csrf.disable())
             
-            // Define que a API é "STATELESS" (sem estado). Não cria sessões no servidor, confia apenas no Token
+            // Define que a API é "STATELESS" (sem estado).
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // Define as regras de quem pode acessar o quê (O "Porteiro")
-           .authorizeHttpRequests(auth -> auth
-            // Rotas públicas
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
-
-            // Permitir acesso público às imagens dos produtos
-            .requestMatchers("/uploads/**").permitAll()
-
-            // Liberar acesso público à documentação Swagger
-            .requestMatchers("/v3/api-docs/**").permitAll()
-            .requestMatchers("/swagger-ui/**").permitAll()
-            .requestMatchers("/swagger-ui.html").permitAll()
-    
-           // Rotas protegidas (só ADMIN)
-            .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
-    
-            // NOVAS ROTAS: Carrinho e Pedidos
-            .requestMatchers("/api/carrinho/**").authenticated()
-            .requestMatchers("/api/pedidos/meus-pedidos").authenticated()
-            .requestMatchers("/api/pedidos/finalizar").authenticated()
-            .requestMatchers("/api/pedidos/**").hasRole("ADMINISTRADOR")
-    
-    // Qualquer outra rota exige autenticação
-    .anyRequest().authenticated()
-    )
+            // <-- NOVO: Configura respostas de erro padrão para APIs REST
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> 
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Não autenticado")) // Retorna 401
+                .accessDeniedHandler((request, response, accessDeniedException) -> 
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acesso negado")) // Retorna 403
+            )
+            
+            // Define as regras de quem pode acessar o quê
+            .authorizeHttpRequests(auth -> auth
+                // Rotas públicas
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+                
+                // Permitir acesso público à documentação Swagger
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/swagger-ui.html").permitAll()
+        
+                // Rotas protegidas (só ADMIN)
+                .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
+        
+                // NOVAS ROTAS: Carrinho e Pedidos
+                .requestMatchers("/api/carrinho/**").authenticated()
+                .requestMatchers("/api/pedidos/meus-pedidos").authenticated()
+                .requestMatchers("/api/pedidos/finalizar").authenticated()
+                .requestMatchers("/api/pedidos/**").hasRole("ADMINISTRADOR")
+        
+                // Qualquer outra rota exige autenticação
+                .anyRequest().authenticated()
+            )
             // Adiciona o nosso filtro JWT ANTES do filtro padrão de senha do Spring
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
             
