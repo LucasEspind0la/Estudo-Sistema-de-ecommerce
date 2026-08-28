@@ -14,7 +14,8 @@ API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com 
 
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 ## 📖 Visão Geral do Projeto
 
@@ -53,14 +54,15 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 ### 📊 Métricas
 - **Entidades:** 8 (User, Category, Product, ProductVariant, Cart, CartItem, Order, OrderItem)
 - **Endpoints:** 30+ rotas RESTful protegidas e públicas
-- **Cobertura:** CRUD completo, fluxo de checkout, baixa automática de estoque e upload de arquivos
-- **Banco:** PostgreSQL com migrations versionadas (Flyway) + H2 para testes
+- **Testes:** 8 testes automatizados (unitários + integração)
+- **Banco:** PostgreSQL com migrations versionadas (Flyway) + H2 para testes isolados
 
 </td>
 </tr>
 </table>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 ## 🛠️ Stack Tecnológica
 
@@ -125,9 +127,9 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td>Testes unitários e de integração</td>
 </tr>
 <tr>
-<td>Spring Boot Test</td>
+<td>Spring Boot Test + MockMvc</td>
 <td>3.3.x</td>
-<td>Contexto de teste integrado</td>
+<td>Testes de integração de rotas HTTP</td>
 </tr>
 <tr>
 <td rowspan="3"><strong>Ferramentas</strong></td>
@@ -147,7 +149,7 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 </tr>
 </table>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 ## 🌐 API Endpoints e Documentação
@@ -174,13 +176,57 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 | `PATCH` | `/api/produtos/{id}/alternar-ativo` | Ativar/Desativar produto | ADMIN |
 | `DELETE` | `/api/produtos/{id}` | Deletar produto | ADMIN |
 
-*(Demais endpoints de Categorias, Carrinho e Pedidos estão detalhados na documentação Swagger)*
+### Categorias
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `GET` | `/api/categorias` | Listar todas as categorias | Público |
+| `GET` | `/api/categorias/{id}` | Buscar categoria por ID | Público |
+| `POST` | `/api/categorias` | Criar nova categoria | ADMIN |
+| `PUT` | `/api/categorias/{id}` | Atualizar categoria | ADMIN |
+| `DELETE` | `/api/categorias/{id}` | Deletar categoria | ADMIN |
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+### Carrinho de Compras
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `GET` | `/api/carrinho` | Obter carrinho do usuário logado | Autenticado |
+| `POST` | `/api/carrinho/adicionar` | Adicionar item ao carrinho | Autenticado |
+| `PUT` | `/api/carrinho/itens/{itemId}` | Atualizar quantidade de um item | Autenticado |
+| `DELETE` | `/api/carrinho/itens/{itemId}` | Remover item do carrinho | Autenticado |
+| `DELETE` | `/api/carrinho/limpar` | Esvaziar carrinho completo | Autenticado |
 
-## 📂 Estrutura do Projeto
+### Pedidos
+| Método | Endpoint | Descrição | Acesso |
+|--------|----------|-----------|--------|
+| `POST` | `/api/pedidos/finalizar` | Finalizar compra (Checkout com baixa de estoque) | Autenticado |
+| `GET` | `/api/pedidos/meus-pedidos` | Listar histórico de pedidos do usuário | Autenticado |
+| `GET` | `/api/pedidos/{pedidoId}` | Buscar detalhes de um pedido específico | Autenticado |
+| `PATCH` | `/api/pedidos/{pedidoId}/status` | Alterar status do pedido | ADMIN |
 
-```text
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 🧪 Testes Automatizados
+
+O projeto possui **8 testes automatizados** divididos em 3 categorias:
+
+### Testes Unitários (Lógica de Negócio Isolada)
+- `OrderServiceTest`: Valida regras de negócio do pedido com Mockito
+
+### Testes de Integração de Rotas (Ponta a Ponta com MockMvc)
+- `ProductIntegrationTest`: Testa criação de produtos, erros de validação e upload de imagens
+- `CartIntegrationTest`: Testa adição ao carrinho e validação de estoque
+- `OrderIntegrationTest`: Testa fluxo completo de finalização de pedido com baixa de estoque
+
+### Teste de Contexto (Sanidade)
+- `ApiApplicationTests`: Garante que o contexto do Spring Boot carrega corretamente
+
+**Para rodar os testes:**
+```bash
+mvn clean test
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📂 Estrutura do Projeto
+
 sistema-vendas/
 ├── backend/
 │   └── api/
@@ -192,17 +238,14 @@ sistema-vendas/
 │       │   ├── model/               # Entidades JPA e Enums
 │       │   ├── repository/          # Interfaces Spring Data JPA
 │       │   ├── security/            # Filtro JWT e UserDetailsService
-│       │   └── service/             # Regras de negócio (inclui FileStorage, Cart, Order)
+│       │   └── service/             # Regras de negócio (FileStorage, Cart, Order)
 │       ├── src/main/resources/
 │       │   ├── application.yml      # Configuração da aplicação (PostgreSQL)
 │       │   └── db/migration/        # Scripts de versionamento Flyway
-│       ├── src/test/                # Testes automatizados (JUnit 5, Mockito, H2)
+│       ├── src/test/                # Testes automatizados (JUnit 5, Mockito, H2, MockMvc)
 │       └── uploads/                 # Diretório local para armazenamento de imagens
 ├── frontend/                        # 🚧 Em planejamento
 └── README.md
-
-
-
 
 ⚙️ Pré-requisitos
 
@@ -210,15 +253,10 @@ sistema-vendas/
     Maven 3.6+
     PostgreSQL 12+
 
-🚀 Como Executar
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    Clone o repositório: git clone https://github.com/LucasEspind0la/Estudo-Sistema-de-e-commerce-.git
-    Configure o banco de dados PostgreSQL no application.yml.
-    Execute as migrations (o Flyway roda automaticamente).
-    Inicie a aplicação: mvn spring-boot:run
-    Acesse a documentação: http://localhost:8080/swagger-ui/index.html
 
-✅ Funcionalidades Implementadas
+    ✅ Funcionalidades Implementadas
 
     CRUD completo de Categorias, Produtos e Variações
     Validação de SKU único e integridade referencial
@@ -234,6 +272,5 @@ sistema-vendas/
     Sistema de pedidos com baixa automática e transacional de estoque
     Validação de estoque em tempo real (impede venda de itens esgotados)
     Upload de imagens de produtos com validação de tipo, tamanho e nomeação única (UUID)
-    Suite de testes automatizados (Unitários com Mockito e de Integração com H2)
+    Suite de testes automatizados (Unitários com Mockito e de Integração com H2/MockMvc)
     Documentação interativa da API com Swagger/OpenAPI (SpringDoc)
-
