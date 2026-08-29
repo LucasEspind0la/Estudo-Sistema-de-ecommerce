@@ -29,9 +29,10 @@ export interface ProductUI extends Product {
   imports: [CommonModule, RouterLink],
   template: `
     <div class="products-container">
-      <header class="header">
+            <header class="header">
         <h1>Catálogo de Produtos</h1>
         <div class="header-actions">
+          <button class="orders-btn" routerLink="/pedidos">📦 Meus Pedidos</button>
           <button class="cart-btn" routerLink="/carrinho">🛒 Carrinho</button>
           <button class="logout-btn" (click)="logout()">Sair</button>
         </div>
@@ -105,6 +106,9 @@ export interface ProductUI extends Product {
     .loading, .empty { text-align: center; padding: 3rem; color: #666; font-size: 1.1rem; }
     .success-msg { color: #27ae60; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; font-weight: 600; }
     .error-msg { color: #e74c3c; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; font-weight: 600; }
+
+    .orders-btn { padding: 0.5rem 1rem; background: #9b59b6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
+    .orders-btn:hover { background: #8e44ad; }
   `]
 })
 export class ProductsComponent implements OnInit {

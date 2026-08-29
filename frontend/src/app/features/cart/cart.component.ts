@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Router, RouterLink } from '@angular/router'; // <-- RouterLink adicionado aqui
+import { Router, RouterLink } from '@angular/router';
 import { CartService, CartResponse } from '../../core/services/cart.service';
+import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 
 /**
- * Componente responsável por exibir o carrinho de compras do usuário.
+ * Componente responsável por exibir o carrinho de compras e permitir a finalização da compra.
  */
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink], // <-- RouterLink adicionado aqui para os botões funcionarem
+  imports: [CommonModule, CurrencyPipe, RouterLink],
   template: `
     <div class="cart-container">
       <header class="header">
@@ -20,6 +21,10 @@ import { AuthService } from '../../core/services/auth.service';
           <button class="logout-btn" (click)="logout()">Sair</button>
         </div>
       </header>
+
+      <!-- Mensagens de Feedback -->
+      <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
 
       <div *ngIf="loading" class="loading">Carregando carrinho...</div>
 
@@ -48,13 +53,17 @@ import { AuthService } from '../../core/services/auth.service';
             <span>Total a pagar:</span>
             <span>{{ cart.total | currency:'BRL':'symbol':'1.2-2' }}</span>
           </div>
-          <button class="checkout-btn" (click)="checkout()">
-            Finalizar Compra
+          <button 
+            class="checkout-btn" 
+            (click)="checkout()"
+            [disabled]="isCheckingOut"
+          >
+            {{ isCheckingOut ? 'Processando...' : 'Finalizar Compra' }}
           </button>
         </div>
       </div>
 
-      <div *ngIf="!loading && (!cart || cart.itens.length === 0)" class="empty-cart">
+      <div *ngIf="!loading && (!cart || cart.itens.length === 0) && !successMessage" class="empty-cart">
         <p>Seu carrinho está vazio.</p>
         <button class="secondary-btn" routerLink="/produtos">Ir para a Loja</button>
       </div>
@@ -82,18 +91,26 @@ import { AuthService } from '../../core/services/auth.service';
     .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: #7f8c8d; }
     .summary-row.total { font-size: 1.2rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #eee; padding-top: 0.75rem; margin-top: 0.75rem; }
     .checkout-btn { width: 100%; padding: 1rem; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
-    .checkout-btn:hover { background: #219150; }
+    .checkout-btn:hover:not(:disabled) { background: #219150; }
+    .checkout-btn:disabled { background: #95a5a6; cursor: not-allowed; }
     .empty-cart { text-align: center; padding: 4rem 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     .empty-cart p { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 1.5rem; }
     .loading { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; }
+    .alert { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; text-align: center; font-weight: 600; }
+    .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
   `]
 })
 export class CartComponent implements OnInit {
   cart: CartResponse | null = null;
   loading = true;
+  isCheckingOut = false;
+  successMessage = '';
+  errorMessage = '';
 
   constructor(
     private cartService: CartService,
+    private orderService: OrderService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -127,10 +144,31 @@ export class CartComponent implements OnInit {
   }
 
   /**
-   * Placeholder para a lógica de checkout (finalização do pedido).
+   * Envia a requisição de finalização de compra para o backend.
+   * Em caso de sucesso, exibe mensagem e recarrega o carrinho (que estará vazio).
    */
   checkout(): void {
-    alert('Funcionalidade de Checkout (Finalizar Pedido) será implementada na próxima etapa! 🚀');
+    this.isCheckingOut = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.orderService.checkout().subscribe({
+      next: () => {
+        this.isCheckingOut = false;
+        this.successMessage = '🎉 Pedido realizado com sucesso! Obrigado pela compra.';
+        this.cart = null; // Limpa a visualização do carrinho
+        // Opcional: redirecionar para uma página de "Meus Pedidos" no futuro
+      },
+      error: (err) => {
+        this.isCheckingOut = false;
+        if (err.status === 400) {
+          this.errorMessage = '❌ Erro ao finalizar: estoque insuficiente ou carrinho inválido.';
+        } else {
+          this.errorMessage = '❌ Ocorreu um erro ao processar seu pedido. Tente novamente.';
+        }
+        console.error('Erro no checkout:', err);
+      }
+    });
   }
 
   /**
