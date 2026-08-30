@@ -25,11 +25,14 @@ public class ProductController {
     
     private final ProductService productService;
     
+    
     // POST /  Cria novo produto (valida payload). Retorna 201 Created.
     
-    @PostMapping
-    public ResponseEntity<ProductResponse> criar(@RequestBody @Valid CreateProductRequest requisicao) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.criar(requisicao));
+       @PostMapping
+    public ResponseEntity<?> criar(@RequestBody @Valid CreateProductRequest requisicao) {
+        // Chama o seu service para criar o produto
+        ProductResponse produtoCriado = productService.criar(requisicao);
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoCriado);
     }
 
     // GET / Lista todos os produtos. Retorna 200 OK.

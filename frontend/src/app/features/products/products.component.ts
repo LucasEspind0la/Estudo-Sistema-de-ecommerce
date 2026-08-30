@@ -5,33 +5,25 @@ import { ProductService, Product } from '../../core/services/product.service';
 import { CartService, AddToCartRequest } from '../../core/services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
 
-/**
- * Estende a interface Product apenas para fins de UI, 
- * permitindo armazenar estados temporários de cada card individualmente.
- */
 export interface ProductUI extends Product {
   isAdding?: boolean;
   uiSuccessMessage?: string;
   uiErrorMessage?: string;
 }
 
-/**
- * Componente responsável por exibir o catálogo de produtos ativos.
- * 
- * Funcionalidades:
- * - Busca e exibe a lista de produtos ativos vindos da API.
- * - Calcula e exibe o menor preço entre as variantes de cada produto.
- * - Permite adicionar a primeira variante do produto ao carrinho com feedback visual isolado por card.
- */
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
     <div class="products-container">
-            <header class="header">
+      <header class="header">
         <h1>Catálogo de Produtos</h1>
         <div class="header-actions">
+          
+          <!-- BOTÃO ADMIN: Agora usa a variável local 'isAdmin' -->
+          <button *ngIf="isAdmin" class="admin-btn" routerLink="/admin/produtos">⚙️ Admin</button>
+          
           <button class="orders-btn" routerLink="/pedidos">📦 Meus Pedidos</button>
           <button class="cart-btn" routerLink="/carrinho">🛒 Carrinho</button>
           <button class="logout-btn" (click)="logout()">Sair</button>
@@ -64,8 +56,6 @@ export interface ProductUI extends Product {
                 A partir de {{ getLowestPrice(product.variantes) | currency:'BRL':'symbol':'1.2-2' }}
               </span>
             </div>
-            
-            <!-- Botão com estado isolado por produto -->
             <button 
               class="add-btn" 
               (click)="addToCart(product)"
@@ -73,8 +63,6 @@ export interface ProductUI extends Product {
             >
               {{ product.isAdding ? 'Adicionando...' : 'Adicionar ao Carrinho' }}
             </button>
-            
-            <!-- Mensagens de Feedback isoladas por produto -->
             <p *ngIf="product.uiSuccessMessage" class="success-msg">{{ product.uiSuccessMessage }}</p>
             <p *ngIf="product.uiErrorMessage" class="error-msg">{{ product.uiErrorMessage }}</p>
           </div>
@@ -87,6 +75,10 @@ export interface ProductUI extends Product {
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
     .header h1 { color: #2c3e50; margin: 0; }
     .header-actions { display: flex; gap: 1rem; }
+    .admin-btn { padding: 0.5rem 1rem; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
+    .admin-btn:hover { background: #1a252f; }
+    .orders-btn { padding: 0.5rem 1rem; background: #9b59b6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
+    .orders-btn:hover { background: #8e44ad; }
     .cart-btn { padding: 0.5rem 1rem; background: #394055; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
     .cart-btn:hover { background: #2746a5; }
     .logout-btn { padding: 0.5rem 1rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
@@ -106,23 +98,25 @@ export interface ProductUI extends Product {
     .loading, .empty { text-align: center; padding: 3rem; color: #666; font-size: 1.1rem; }
     .success-msg { color: #27ae60; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; font-weight: 600; }
     .error-msg { color: #e74c3c; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; font-weight: 600; }
-
-    .orders-btn { padding: 0.5rem 1rem; background: #9b59b6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
-    .orders-btn:hover { background: #8e44ad; }
   `]
 })
 export class ProductsComponent implements OnInit {
   products: ProductUI[] = [];
   loading = true;
+  
+  // Variável local para controlar a exibição do botão Admin
+  isAdmin = false;
 
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private authService: AuthService,
+    private authService: AuthService, // Pode continuar private agora!
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Verifica se é admin e salva na variável local
+    this.isAdmin = this.authService.isAdmin();
     this.loadProducts();
   }
 
@@ -144,10 +138,6 @@ export class ProductsComponent implements OnInit {
     return Math.min(...variants.map((v: any) => v.preco));
   }
 
-  /**
-   * Adiciona a primeira variante disponível do produto ao carrinho.
-   * O estado de feedback (sucesso/erro) é aplicado APENAS ao produto clicado.
-   */
   addToCart(product: ProductUI): void {
     if (!product.variantes || product.variantes.length === 0) {
       product.uiErrorMessage = 'Produto sem variantes disponíveis.';
@@ -188,4 +178,6 @@ export class ProductsComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  
 }

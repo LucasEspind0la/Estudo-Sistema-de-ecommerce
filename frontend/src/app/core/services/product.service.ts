@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
+
+export interface ProductVariantCreateRequest {
+  cor: string;
+  tamanho: string;
+  preco: number;
+  estoque: number;
+}
+
+export interface CreateProductRequest {
+  nome: string;
+  descricao: string;
+  categoriaId: number;
+  variantes: ProductVariantCreateRequest[];
+}
 
 export interface ProductVariant {
   id: number;
@@ -18,6 +32,7 @@ export interface Product {
   ativo: boolean;
   destaque: boolean;
   imagemUrl: string | null;
+  categoria?: { id: number; nome: string };
   variantes: ProductVariant[];
 }
 
@@ -29,5 +44,24 @@ export class ProductService {
 
   getActiveProducts(): Observable<Product[]> {
     return this.http.get<Product[]>('/api/produtos/ativos');
+  }
+
+  createProductWithImage(payload: CreateProductRequest, file?: File): Observable<Product> {
+    return this.http.post<Product>('/api/produtos', payload).pipe(
+      switchMap((createdProduct) => {
+        if (!file) {
+          return of(createdProduct);
+        }
+        const formData = new FormData();
+        formData.append('imagem', file, file.name);
+        
+        // Concatenação simples para evitar erros de sintaxe no terminal
+        const url = '/api/produtos/' + createdProduct.id + '/imagem';
+        
+        return this.http.put<Product>(url, formData).pipe(
+          switchMap(() => of(createdProduct))
+        );
+      })
+    );
   }
 }
