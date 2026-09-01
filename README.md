@@ -1,18 +1,23 @@
-# Estudo de Sistema de Vendas - API RESTful
+cd ~/Área\ de\ Trabalho/Vendas
+
+cat << 'EOF' > README.md
+# Sistema de E-commerce Full Stack - API RESTful & Angular
 
 <div align="center">
 
 ![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.x-brightgreen?style=for-the-badge&logo=spring)
+![Angular](https://img.shields.io/badge/Angular-17+-red?style=for-the-badge&logo=angular)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue?style=for-the-badge&logo=postgresql)
 ![JWT](https://img.shields.io/badge/JWT-Security-black?style=for-the-badge&logo=jsonwebtokens)
 ![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge&logo=swagger)
 ![Testes](https://img.shields.io/badge/Testes-JUnit%20%26%20Mockito-yellow?style=for-the-badge&logo=junit5)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com foco em boas práticas, código limpo, autenticação JWT, testes automatizados, documentação interativa e arquitetura em camadas.
-
 </div>
+
+Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Backend) e **Angular** (Frontend). O projeto implementa um fluxo real de vendas, desde o gerenciamento de produtos pelo administrador até a finalização de compra pelo cliente, com autenticação segura via JWT, controle de acesso baseado em papéis (RBAC) e testes automatizados.
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -23,19 +28,24 @@ API RESTful robusta e segura para gerenciamento de e-commerce, desenvolvida com 
 <td width="50%">
 
 ### 🎯 Objetivo
-Sistema completo de vendas online para gerenciamento de produtos com variações (tamanho, cor, preço, estoque), carrinho de compras, ciclo de pedidos e upload de imagens, servindo como material de estudo avançado e portfólio profissional.
+Servir como material de estudo avançado e portfólio profissional, demonstrando domínio em arquitetura em camadas, segurança, boas práticas de UI/UX e integração completa entre Frontend e Backend.
 
-### ✨ Destaques Técnicos
+### ✨ Destaques Técnicos (Backend)
 - Arquitetura em camadas (Controller → Service → Repository)
 - Autenticação e Autorização com JWT e Spring Security
 - Criptografia de senhas com BCrypt
-- Controle de acesso baseado em funções (RBAC: ADMINISTRADOR vs CLIENTE)
 - Validações de negócio e integridade referencial (ex: bloqueio de venda sem estoque)
-- Tratamento global de exceções padronizado (401/403)
+- Tratamento global de exceções padronizado
 - Migrations de banco de dados versionadas com Flyway
 - Padrão DTO com Records (Java 14+)
-- **Documentação interativa com Swagger/OpenAPI**
-- **Suite de testes automatizados (Unitários e de Integração)**
+- Suite de testes automatizados (Unitários e de Integração)
+
+### ✨ Destaques Técnicos (Frontend)
+- Arquitetura Moderna com **Standalone Components** (Angular 17+)
+- **Reactive Forms** com validação robusta e feedback visual em tempo real
+- **Interceptors** para injeção automática e transparente do token JWT
+- Programação reativa com **RxJS** (ex: `switchMap` para encadear criação de produto + upload de imagem)
+- Controle de acesso na UI (RBAC): rotas e botões visíveis apenas para `ADMINISTRADOR`
 
 </td>
 <td width="50%">
@@ -47,14 +57,15 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 - **Upload de Imagens:** ✅ Completo e Funcional
 - **Testes Automatizados:** ✅ Completo e Funcional (12 testes)
 - **Documentação (Swagger):** ✅ Completo e Funcional
-- **Frontend:** 🚧 Em Planejamento
+- **Frontend (Cliente):** ✅ Completo e Funcional (Catálogo, Carrinho, Checkout, Pedidos)
+- **Frontend (Admin):** ✅ Completo e Funcional (Listagem, Cadastro com Upload, Exclusão)
 - **Deploy:** 🚧 Planejado
 
 ### 📊 Métricas
 - **Entidades:** 8 (User, Category, Product, ProductVariant, Cart, CartItem, Order, OrderItem)
 - **Endpoints:** 30+ rotas RESTful protegidas e públicas
-- **Testes:** 12 testes automatizados (unitários + integração de rotas e segurança)
-- **Banco:** PostgreSQL com migrations versionadas (Flyway) + H2 para testes isolados
+- **Testes:** 12 testes automatizados (unitários + integração)
+- **Frontend:** 10+ componentes, 4 serviços core, roteamento com guards
 
 </td>
 </tr>
@@ -119,6 +130,27 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td>Versionamento de schema</td>
 </tr>
 <tr>
+<td rowspan="4"><strong>Frontend</strong></td>
+<td>Angular</td>
+<td>17+</td>
+<td>Framework SPA (Single Page Application)</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>5.x</td>
+<td>Tipagem estática e segurança de código</td>
+</tr>
+<tr>
+<td>RxJS</td>
+<td>7.x</td>
+<td>Programação reativa e gerenciamento de fluxos assíncronos</td>
+</tr>
+<tr>
+<td>Angular Material / CSS3</td>
+<td>Nativo</td>
+<td>Estilização moderna e responsiva</td>
+</tr>
+<tr>
 <td rowspan="2"><strong>Testes</strong></td>
 <td>JUnit 5 + Mockito</td>
 <td>5.x</td>
@@ -130,15 +162,10 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 <td>Testes de integração de rotas HTTP</td>
 </tr>
 <tr>
-<td rowspan="3"><strong>Ferramentas</strong></td>
-<td>Maven</td>
-<td>3.6+</td>
+<td rowspan="2"><strong>Ferramentas</strong></td>
+<td>Maven / npm</td>
+<td>3.6+ / 10+</td>
 <td>Gerenciamento de dependências</td>
-</tr>
-<tr>
-<td>Lombok</td>
-<td>1.18.x</td>
-<td>Redução de código boilerplate</td>
 </tr>
 <tr>
 <td>Git</td>
@@ -149,89 +176,66 @@ Sistema completo de vendas online para gerenciamento de produtos com variações
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+## 🚀 Como Rodar o Projeto
+
+### Pré-requisitos
+- JDK 17+ e Maven instalados.
+- Node.js 18+ e Angular CLI (`npm install -g @angular/cli`).
+- PostgreSQL rodando na porta `5432` (ajuste o `application.properties` se necessário).
+
+### 1. Iniciar o Backend
+Abra um terminal e execute:
+
+cd ~/Área\ de\ Trabalho/Vendas/backend/api
+mvn spring-boot:run
+
+### 2. Iniciar o Frontend
+
+cd ~/Área\ de\ Trabalho/Vendas/frontend
+ng serve -o
+
+
+(A aplicação abrirá automaticamente em `http://localhost:4200`)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 🔑 Credenciais de Teste
+
+O sistema utiliza controle de acesso (RBAC). Você pode criar novos usuários via endpoint `/api/auth/cadastrar` ou usar os perfis abaixo no Frontend:
+
+| Perfil | Email | Senha | Acesso |
+| :--- | :--- | :--- | :--- |
+| **Administrador** | `admin@teste.com` | `123456` | Painel Admin (CRUD Produtos) e Loja |
+| **Cliente** | `lucas@teste.com` | `123456` | Apenas Loja (Catálogo, Carrinho, Pedidos) |
+
+---
+
 ## 🌐 API Endpoints e Documentação
 
 > **💡 Dica Profissional:** A documentação interativa completa está disponível em:  
 > 👉 `http://localhost:8080/swagger-ui/index.html`  
 > *(Use o botão "Authorize" no topo direito para inserir seu token JWT: `Bearer <seu_token>`)*
 
-### Autenticação
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `POST` | `/api/auth/cadastrar` | Cadastrar novo usuário | Público |
-| `POST` | `/api/auth/login` | Autenticar e receber token JWT | Público |
-
-### Produtos
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `GET` | `/api/produtos` | Listar todos os produtos | Público |
-| `GET` | `/api/produtos/ativos` | Listar apenas produtos ativos | Público |
-| `GET` | `/api/produtos/{id}` | Buscar produto com suas variações | Público |
-| `POST` | `/api/produtos` | Criar produto com variações | ADMIN |
-| `PUT` | `/api/produtos/{id}` | Atualizar dados do produto | ADMIN |
-| `PUT` | `/api/produtos/{id}/imagem` | **Upload de imagem do produto** | ADMIN |
-| `PATCH` | `/api/produtos/{id}/alternar-ativo` | Ativar/Desativar produto | ADMIN |
-| `DELETE` | `/api/produtos/{id}` | Deletar produto | ADMIN |
-
-### Categorias
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `GET` | `/api/categorias` | Listar todas as categorias | Público |
-| `GET` | `/api/categorias/{id}` | Buscar categoria por ID | Público |
-| `POST` | `/api/categorias` | Criar nova categoria | ADMIN |
-| `PUT` | `/api/categorias/{id}` | Atualizar categoria | ADMIN |
-| `DELETE` | `/api/categorias/{id}` | Deletar categoria | ADMIN |
-
-### Carrinho de Compras
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `GET` | `/api/carrinho` | Obter carrinho do usuário logado | Autenticado |
-| `POST` | `/api/carrinho/adicionar` | Adicionar item ao carrinho | Autenticado |
-| `PUT` | `/api/carrinho/itens/{itemId}` | Atualizar quantidade de um item | Autenticado |
-| `DELETE` | `/api/carrinho/itens/{itemId}` | Remover item do carrinho | Autenticado |
-| `DELETE` | `/api/carrinho/limpar` | Esvaziar carrinho completo | Autenticado |
-
-### Pedidos
-| Método | Endpoint | Descrição | Acesso |
-|--------|----------|-----------|--------|
-| `POST` | `/api/pedidos/finalizar` | Finalizar compra (Checkout com baixa de estoque) | Autenticado |
-| `GET` | `/api/pedidos/meus-pedidos` | Listar histórico de pedidos do usuário | Autenticado |
-| `GET` | `/api/pedidos/{pedidoId}` | Buscar detalhes de um pedido específico | Autenticado |
-| `PATCH` | `/api/pedidos/{pedidoId}/status` | Alterar status do pedido | ADMIN |
-
-
+*(A tabela completa de endpoints do Backend permanece a mesma: Autenticação, Produtos, Categorias, Carrinho e Pedidos, todos protegidos conforme a coluna "Acesso" no Swagger).*
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
 
 ## 🧪 Testes Automatizados
 
-O projeto possui **12 testes automatizados** divididos em 3 categorias:
-
-### Testes Unitários (Lógica de Negócio Isolada)
-- `OrderServiceTest`: Valida regras de negócio do pedido com Mockito
-
-### Testes de Integração de Rotas (Ponta a Ponta com MockMvc)
-- `AuthIntegrationTest`: Testa login, credenciais inválidas e validação de acesso (401/403)
-- `ProductIntegrationTest`: Testa criação de produtos, erros de validação e upload de imagens
-- `CartIntegrationTest`: Testa adição ao carrinho e validação de estoque
-- `OrderIntegrationTest`: Testa fluxo completo de finalização de pedido com baixa de estoque
-
-### Teste de Contexto (Sanidade)
-- `ApiApplicationTests`: Garante que o contexto do Spring Boot carrega corretamente
+O projeto backend possui **12 testes automatizados** divididos em 3 categorias:
+- **Unitários:** `OrderServiceTest` (Valida regras de negócio com Mockito).
+- **Integração de Rotas:** `AuthIntegrationTest`, `ProductIntegrationTest`, `CartIntegrationTest`, `OrderIntegrationTest` (Testes ponta a ponta com MockMvc e H2).
+- **Sanidade:** `ApiApplicationTests` (Garante que o contexto do Spring Boot carrega corretamente).
 
 **Para rodar os testes:**
 ```bash
+cd backend/api
 mvn clean test
-
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-📂 Estrutura do Projet
-
-sistema-vendas/
+Vendas/
 ├── backend/
 │   └── api/
 │       ├── src/main/java/com/sualoja/api/
@@ -248,45 +252,35 @@ sistema-vendas/
 │       │   └── db/migration/        # Scripts de versionamento Flyway
 │       ├── src/test/                # Testes automatizados (JUnit 5, Mockito, H2, MockMvc)
 │       └── uploads/                 # Diretório local para armazenamento de imagens
-├── frontend/                        # 🚧 Em planejamento
+│
+├── frontend/
+│   └── src/app/
+│       ├── core/                    # Serviços (Auth, Product, Cart, Order), Interceptors, Models
+│       ├── features/                # Componentes de UI (Login, Produtos, Carrinho, Pedidos, Admin)
+│       └── app.routes.ts            # Configuração de rotas e Guards de proteção
+│
 └── README.md
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-⚙️ Pré-requisitos
 
-    Java 17+
-    Maven 3.6+
-    PostgreSQL 12+
+✅ Funcionalidades Implementadas (Resumo Full Stack)
 
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-✅ Funcionalidades Implementadas
-
-    CRUD completo de Categorias, Produtos e Variações
-    Validação de SKU único e integridade referencial
-    Tratamento global de exceções (GlobalExceptionHandler)
-    Migrations de banco de dados com Flyway
-    Configuração de CORS para frontend
-    Arquitetura em camadas bem definida
-    DTOs com Records (Java 14+)
-    Autenticação JWT (Login e Cadastro)
-    Criptografia de senhas com BCrypt
-    Proteção de rotas por perfil (ADMINISTRADOR vs CLIENTE)
-    Tratamento correto de erros de segurança (401 Unauthorized / 403 Forbidden)
-    Carrinho de compras com cálculo automático de subtotal e total
-    Sistema de pedidos com baixa automática e transacional de estoque
-    Validação de estoque em tempo real (impede venda de itens esgotados)
+    CRUD completo de Categorias, Produtos e Variações (Backend + Frontend Admin)
     Upload de imagens de produtos com validação de tipo, tamanho e nomeação única (UUID)
-    Suite de testes automatizados (12 testes: Unitários com Mockito e de Integração com H2/MockMvc)
-    Documentação interativa da API com Swagger/OpenAPI (SpringDoc)
+    Autenticação JWT com Interceptor no Angular (injeção automática de token)
+    Proteção de rotas por perfil (UI e Backend: ADMINISTRADOR vs CLIENTE)
+    Carrinho de compras com cálculo automático e validação de estoque em tempo real
+    Sistema de pedidos com baixa automática e transacional de estoque (Checkout)
+    Histórico de pedidos ("Meus Pedidos") para o cliente
+    Tratamento global de exceções e feedback visual amigável no Frontend
+    Suite de testes automatizados e Documentação interativa com Swagger/OpenAPI
 
-🔜 Próximos Passos
+🔜 Próximos Passos (Backlog)
 
-    Frontend Angular completo (consumindo a API com Interceptors)
-    Integração com Gateway de Pagamento (ex: Mercado Pago ou Stripe)
-    Deploy em nuvem (Backend + Frontend + Banco)
-    CI/CD com GitHub Actions
-    
+    Editar Produto: Tela no Admin para alterar preço, estoque e trocar a imagem de um produto existente.
+    Dashboard Administrativo: Métricas visuais (Total de vendas, Produtos com estoque baixo).
+    Integração com Gateway de Pagamento: (ex: Mercado Pago ou Stripe).
+    Deploy em Nuvem: Backend (Render/Railway), Frontend (Vercel/Netlify) e Banco (Neon/Supabase).
+    CI/CD: Pipeline de integração contínua com GitHub Actions.
