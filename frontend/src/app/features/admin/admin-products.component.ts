@@ -3,12 +3,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ProductService, Product } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
-import { HttpClient } from '@angular/common/http';
 
-/**
- * Componente exclusivo para Administradores.
- * Permite visualizar a lista completa de produtos e realizar ações de gerenciamento (ex: excluir).
- */
 @Component({
   selector: 'app-admin-products',
   standalone: true,
@@ -24,13 +19,9 @@ import { HttpClient } from '@angular/common/http';
         </div>
       </header>
 
-      <div *ngIf="loading" class="loading">Carregando produtos...</div>
+      <div *ngIf="loading" class="loading">Carregando...</div>
 
-      <div *ngIf="!loading && products.length === 0" class="empty">
-        Nenhum produto cadastrado no sistema.
-      </div>
-
-      <div *ngIf="!loading && products.length > 0" class="products-table-container">
+      <div *ngIf="!loading && products.length > 0" class="table-container">
         <table class="products-table">
           <thead>
             <tr>
@@ -38,7 +29,7 @@ import { HttpClient } from '@angular/common/http';
               <th>Nome</th>
               <th>Categoria</th>
               <th>Preço Mín.</th>
-              <th>Estoque Total</th>
+              <th>Estoque</th>
               <th>Status</th>
               <th>Ações</th>
             </tr>
@@ -47,21 +38,27 @@ import { HttpClient } from '@angular/common/http';
             <tr *ngFor="let product of products">
               <td>{{ product.id }}</td>
               <td>{{ product.nome }}</td>
-              <td>{{ product.categoria?.nome || '-' }}</td>
+              <td>{{ product.categoriaNome || '-' }}</td>
               <td>{{ getLowestPrice(product.variantes) | currency:'BRL':'symbol':'1.2-2' }}</td>
               <td>{{ getTotalStock(product.variantes) }}</td>
               <td>
-                <span class="status-badge" [class.active]="product.ativo" [class.inactive]="!product.ativo">
+                <span class="badge" [class.active]="product.ativo" [class.inactive]="!product.ativo">
                   {{ product.ativo ? 'Ativo' : 'Inativo' }}
                 </span>
               </td>
               <td class="actions">
+                <button class="btn-toggle" (click)="toggleActive(product)" title="Alternar Status">
+                  {{ product.ativo ? 'Desativar' : 'Ativar' }}
+                </button>
+                <button class="btn-edit" routerLink="/admin/produtos/editar/{{ product.id }}">Editar</button>
                 <button class="btn-delete" (click)="deleteProduct(product.id)">Excluir</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+      
+      <div *ngIf="!loading && products.length === 0" class="empty">Nenhum produto cadastrado.</div>
     </div>
   `,
   styles: [`
@@ -70,19 +67,20 @@ import { HttpClient } from '@angular/common/http';
     .header h1 { color: #2c3e50; margin: 0; }
     .header-actions { display: flex; gap: 1rem; }
     .primary-btn { padding: 0.5rem 1rem; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
-    .primary-btn:hover { background: #219150; }
     .secondary-btn { padding: 0.5rem 1rem; background: #ecf0f1; color: #2c3e50; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
     .logout-btn { padding: 0.5rem 1rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .loading, .empty { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; }
-    .products-table-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow-x: auto; }
+    .table-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow-x: auto; }
     .products-table { width: 100%; border-collapse: collapse; }
     .products-table th, .products-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
     .products-table th { background: #f8f9fa; color: #2c3e50; font-weight: 600; }
-    .status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-    .status-badge.active { background: #d4edda; color: #155724; }
-    .status-badge.inactive { background: #f8d7da; color: #721c24; }
+    .badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .badge.active { background: #d4edda; color: #155724; }
+    .badge.inactive { background: #f8d7da; color: #721c24; }
+    .actions { display: flex; gap: 0.5rem; }
+    .btn-toggle { padding: 0.4rem 0.8rem; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+    .btn-edit { padding: 0.4rem 0.8rem; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
     .btn-delete { padding: 0.4rem 0.8rem; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
-    .btn-delete:hover { background: #c0392b; }
+    .loading, .empty { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; }
   `]
 })
 export class AdminProductsComponent implements OnInit {
@@ -91,13 +89,11 @@ export class AdminProductsComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private http: HttpClient,
     private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Segurança extra: se não for admin, chuta para o login
     if (!this.authService.isAdmin()) {
       this.router.navigate(['/login']);
       return;
@@ -105,25 +101,15 @@ export class AdminProductsComponent implements OnInit {
     this.loadProducts();
   }
 
-  /**
-   * Carrega todos os produtos (usando a rota de admin ou a padrão se não houver restrição).
-   */
   loadProducts(): void {
-    // O backend retorna todos os produtos para ADMIN na rota /api/produtos
-    this.http.get<Product[]>('/api/produtos').subscribe({
-      next: (data) => {
-        this.products = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar produtos para admin:', err);
-        this.loading = false;
-      }
+    this.productService.getAllProducts().subscribe({
+      next: (data) => { this.products = data; this.loading = false; },
+      error: () => { this.loading = false; }
     });
   }
 
   getLowestPrice(variants: any[]): number {
-    if (!variants || variants.length === 0) return 0;
+    if (!variants?.length) return 0;
     return Math.min(...variants.map((v: any) => v.preco));
   }
 
@@ -132,19 +118,26 @@ export class AdminProductsComponent implements OnInit {
     return variants.reduce((sum: number, v: any) => sum + v.estoque, 0);
   }
 
-  /**
-   * Exclui um produto do sistema.
-   */
+  toggleActive(product: Product): void {
+    if (confirm(`Deseja ${product.ativo ? 'desativar' : 'ativar'} este produto?`)) {
+      this.productService.toggleActive(product.id).subscribe({
+        next: () => {
+          product.ativo = !product.ativo;
+        },
+        error: (err) => console.error('Erro ao alternar status:', err)
+      });
+    }
+  }
+
   deleteProduct(id: number): void {
     if (confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.')) {
-      this.http.delete(`/api/produtos/${id}`).subscribe({
+      this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.products = this.products.filter(p => p.id !== id);
-          alert('Produto excluído com sucesso!');
         },
         error: (err) => {
-          console.error('Erro ao excluir produto:', err);
-          alert('Erro ao excluir produto. Verifique se ele não está vinculado a um pedido.');
+          console.error('Erro ao excluir:', err);
+          alert('Não foi possível excluir. O produto pode estar vinculado a um pedido.');
         }
       });
     }
