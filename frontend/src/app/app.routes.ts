@@ -5,6 +5,8 @@ import { CartComponent } from './features/cart/cart.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { AdminProductsComponent } from './features/admin/admin-products.component';
 import { AdminProductFormComponent } from './features/admin/admin-product-form.component';
+import { AdminCategoriesComponent } from './features/admin/admin-categories.component';
+import { AdminCategoryFormComponent } from './features/admin/admin-category-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -15,5 +17,8 @@ export const routes: Routes = [
   { path: 'admin/produtos', component: AdminProductsComponent },
   { path: 'admin/produtos/novo', component: AdminProductFormComponent },
   { path: 'admin/produtos/editar/:id', component: AdminProductFormComponent },
+  { path: 'admin/categorias', component: AdminCategoriesComponent },
+  { path: 'admin/categorias/nova', component: AdminCategoryFormComponent },
+  { path: 'admin/categorias/editar/:id', component: AdminCategoryFormComponent },
   { path: '**', redirectTo: '/login' }
 ];
