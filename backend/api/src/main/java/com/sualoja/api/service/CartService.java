@@ -120,19 +120,28 @@ public class CartService {
     }
 
     // Remove um item específico do carrinho
+        // Remove um item específico do carrinho
     @Transactional
     public CartResponse removerItem(Long usuarioId, Long itemId) {
-        CartItem item = cartItemRepository.findById(itemId)
-            .orElseThrow(() -> new ResourceNotFoundException("Item do carrinho não encontrado"));
+        // 1. Busca o carrinho do usuário
+        Cart carrinho = cartRepository.findByUsuarioId(usuarioId)
+            .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado"));
 
-        // Garante que o item pertence ao carrinho do usuário
-        if (!item.getCarrinho().getUsuario().getId().equals(usuarioId)) {
-            throw new IllegalArgumentException("Este item não pertence ao seu carrinho");
-        }
+        // 2. Encontra o item dentro da lista do carrinho
+        CartItem item = carrinho.getItens().stream()
+            .filter(i -> i.getId().equals(itemId))
+            .findFirst()
+            .orElseThrow(() -> new ResourceNotFoundException("Item não encontrado no carrinho"));
 
-        cartItemRepository.delete(item);
+        // 3. Remove o item da lista. 
+        // Como a entidade Cart tem 'orphanRemoval = true', o Hibernate deletará 
+        // o item do banco de dados automaticamente ao salvar o carrinho!
+        carrinho.getItens().remove(item);
+        
+        // 4. Salva o carrinho para persistir a remoção
+        cartRepository.save(carrinho);
 
-        return CartResponse.deEntidade(cartRepository.findByUsuarioId(usuarioId).get());
+        return CartResponse.deEntidade(carrinho);
     }
 
     // Limpa todo o carrinho (remove todos os itens)

@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { CartService, CartResponse } from '../../core/services/cart.service';
+import { CartService, CartResponse, CartItem } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 
-/**
- * Componente responsável por exibir o carrinho de compras e permitir a finalização da compra.
- */
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -22,7 +19,6 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
       </header>
 
-      <!-- Mensagens de Feedback -->
       <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
       <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
 
@@ -32,13 +28,24 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="cart-items">
           <div *ngFor="let item of cart.itens" class="cart-item">
             <div class="item-info">
-              <h3>{{ item.produtoNome }}</h3>
-              <p class="variant">{{ item.varianteDescricao }}</p>
+              <h3>{{ item.nomeProduto }}</h3>
+              <p class="variant">{{ item.cor }} - Tam: {{ item.tamanho }}</p>
+              <p class="unit-price">Preço unitário: {{ item.precoUnitario | currency:'BRL':'symbol':'1.2-2' }}</p>
             </div>
-            <div class="item-details">
-              <span class="quantity">Qtd: {{ item.quantidade }}</span>
-              <span class="price">{{ item.precoUnitario | currency:'BRL':'symbol':'1.2-2' }}</span>
-              <span class="subtotal">{{ item.subtotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+
+            <div class="item-controls">
+              <div class="quantity-control">
+                <button class="qty-btn" (click)="updateQuantity(item, item.quantidade - 1)" [disabled]="item.quantidade <= 1">-</button>
+                <span class="qty-value">{{ item.quantidade }}</span>
+                <button class="qty-btn" (click)="updateQuantity(item, item.quantidade + 1)">+</button>
+              </div>
+              
+              <button class="remove-btn" (click)="removeItem(item)">Remover</button>
+            </div>
+
+            <div class="item-subtotal">
+              <span class="subtotal-label">Subtotal</span>
+              <span class="subtotal-value">{{ item.subtotal | currency:'BRL':'symbol':'1.2-2' }}</span>
             </div>
           </div>
         </div>
@@ -51,7 +58,7 @@ import { AuthService } from '../../core/services/auth.service';
           </div>
           <div class="summary-row total">
             <span>Total a pagar:</span>
-            <span>{{ cart.total | currency:'BRL':'symbol':'1.2-2' }}</span>
+            <span>{{ cart.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
           </div>
           <button 
             class="checkout-btn" 
@@ -78,14 +85,23 @@ import { AuthService } from '../../core/services/auth.service';
     .secondary-btn:hover { background: #bdc3c7; }
     .logout-btn { padding: 0.5rem 1rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
     .cart-content { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .cart-items { flex: 2; min-width: 300px; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 1rem; }
+    .cart-items { flex: 2; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); gap: 1rem; }
+    .item-info { flex: 2; }
     .item-info h3 { margin: 0 0 0.25rem 0; color: #2c3e50; font-size: 1.1rem; }
-    .variant { color: #7f8c8d; font-size: 0.9rem; margin: 0; }
-    .item-details { display: flex; gap: 1.5rem; align-items: center; text-align: right; }
-    .quantity { color: #7f8c8d; font-weight: 500; }
-    .price { color: #2c3e50; font-weight: 600; min-width: 80px; }
-    .subtotal { color: #27ae60; font-weight: 700; font-size: 1.1rem; min-width: 100px; }
+    .variant { color: #7f8c8d; font-size: 0.9rem; margin: 0 0 0.25rem 0; }
+    .unit-price { color: #2c3e50; font-size: 0.85rem; margin: 0; font-weight: 500; }
+    .item-controls { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .quantity-control { display: flex; align-items: center; gap: 0.5rem; background: #f8f9fa; padding: 0.25rem; border-radius: 6px; }
+    .qty-btn { width: 32px; height: 32px; background: white; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.1rem; color: #2c3e50; display: flex; align-items: center; justify-content: center; }
+    .qty-btn:hover:not(:disabled) { background: #3498db; color: white; border-color: #3498db; }
+    .qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .qty-value { min-width: 30px; text-align: center; font-weight: 600; font-size: 1rem; }
+    .remove-btn { padding: 0.4rem 0.8rem; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .remove-btn:hover { background: #c0392b; }
+    .item-subtotal { flex: 1; text-align: right; min-width: 100px; }
+    .subtotal-label { display: block; color: #7f8c8d; font-size: 0.8rem; margin-bottom: 0.25rem; }
+    .subtotal-value { color: #27ae60; font-weight: 700; font-size: 1.1rem; }
     .cart-summary { flex: 1; min-width: 250px; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: fit-content; }
     .cart-summary h2 { margin-top: 0; color: #2c3e50; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
     .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: #7f8c8d; }
@@ -135,18 +151,57 @@ export class CartComponent implements OnInit {
     });
   }
 
-  /**
-   * Calcula a soma total de quantidades de todos os itens no carrinho.
-   */
   getTotalItems(): number {
     if (!this.cart) return 0;
     return this.cart.itens.reduce((sum, item) => sum + item.quantidade, 0);
   }
 
   /**
-   * Envia a requisição de finalização de compra para o backend.
-   * Em caso de sucesso, exibe mensagem e recarrega o carrinho (que estará vazio).
+   * Atualiza a quantidade de um item no carrinho.
+   * Após o sucesso, recarrega o carrinho do zero para garantir sincronia total.
    */
+  updateQuantity(item: CartItem, novaQuantidade: number): void {
+    if (novaQuantidade < 1) return;
+    
+    this.cartService.updateItemQuantity(item.id, novaQuantidade).subscribe({
+      next: () => {
+        this.loadCart(); // A mágica: busca o estado fresco do backend
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar quantidade:', err);
+        this.errorMessage = 'Erro ao atualizar. Verifique o estoque.';
+        setTimeout(() => this.errorMessage = '', 3000);
+        this.loadCart();
+      }
+    });
+  }
+
+  /**
+   * Remove um item do carrinho.
+   * Após o sucesso, recarrega o carrinho do zero.
+   */
+    removeItem(item: CartItem): void {
+    console.log('🔴 Tentando remover item ID:', item.id);
+    
+    if (!confirm(`Deseja remover "${item.nomeProduto}" do carrinho?`)) return;
+
+    console.log('✅ Confirmação OK. Enviando DELETE para /api/carrinho/itens/' + item.id);
+
+    this.cartService.removeItem(item.id).subscribe({
+      next: (response) => {
+        console.log('🟢 DELETE sucesso! Response:', response);
+        console.log('🔄 Chamando loadCart()...');
+        this.loadCart();
+      },
+      error: (err) => {
+        console.error('🔴 ERRO no DELETE:', err);
+        this.errorMessage = 'Erro ao remover item.';
+        setTimeout(() => this.errorMessage = '', 3000);
+        this.loadCart();
+      }
+    });
+  }
+
   checkout(): void {
     this.isCheckingOut = true;
     this.successMessage = '';
@@ -156,24 +211,20 @@ export class CartComponent implements OnInit {
       next: () => {
         this.isCheckingOut = false;
         this.successMessage = '🎉 Pedido realizado com sucesso! Obrigado pela compra.';
-        this.cart = null; // Limpa a visualização do carrinho
-        // Opcional: redirecionar para uma página de "Meus Pedidos" no futuro
+        this.loadCart(); // Recarrega para mostrar o carrinho vazio
       },
       error: (err) => {
         this.isCheckingOut = false;
         if (err.status === 400) {
           this.errorMessage = '❌ Erro ao finalizar: estoque insuficiente ou carrinho inválido.';
         } else {
-          this.errorMessage = '❌ Ocorreu um erro ao processar seu pedido. Tente novamente.';
+          this.errorMessage = '❌ Ocorreu um erro ao processar seu pedido.';
         }
         console.error('Erro no checkout:', err);
       }
     });
   }
 
-  /**
-   * Encerra a sessão do usuário e redireciona para a tela de login.
-   */
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
