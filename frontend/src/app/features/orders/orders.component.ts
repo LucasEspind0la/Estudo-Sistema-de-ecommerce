@@ -4,14 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { OrderService, Order } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 
-/**
- * Componente responsável por exibir o histórico de pedidos do usuário.
- */
 @Component({
   selector: 'app-orders',
   standalone: true,
   imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink],
-  template: `
+  template: `s
     <div class="orders-container">
       <header class="header">
         <h1>Meus Pedidos</h1>
@@ -33,7 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="order-header">
             <div class="order-info">
               <h3>Pedido #{{ order.id }}</h3>
-              <p class="order-date">{{ order.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p class="order-date">{{ order.criadoEm | date:'dd/MM/yyyy HH:mm' }}</p>
             </div>
             <div class="order-status">
               <span class="status-badge" [ngClass]="getStatusClass(order.status)">
@@ -45,8 +42,8 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="order-items">
             <div *ngFor="let item of order.itens" class="order-item">
               <div class="item-details">
-                <strong>{{ item.produtoNome }}</strong>
-                <span class="variant">{{ item.varianteDescricao }}</span>
+                <strong>{{ item.nomeProduto }}</strong>
+                <span class="variant">{{ item.cor }} - Tam: {{ item.tamanho }}</span>
               </div>
               <div class="item-pricing">
                 <span>{{ item.quantidade }}x {{ item.precoUnitario | currency:'BRL':'symbol':'1.2-2' }}</span>
@@ -56,8 +53,11 @@ import { AuthService } from '../../core/services/auth.service';
           </div>
 
           <div class="order-footer">
-            <span class="total-label">Total:</span>
-            <span class="total-value">{{ order.total | currency:'BRL':'symbol':'1.2-2' }}</span>
+            <div class="footer-left">
+              <span class="total-label">Total:</span>
+              <span class="total-value">{{ order.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+            </div>
+            <button class="btn-details" routerLink="/pedidos/{{ order.id }}">Ver Detalhes</button>
           </div>
         </div>
       </div>
@@ -79,11 +79,11 @@ import { AuthService } from '../../core/services/auth.service';
     .order-info h3 { margin: 0 0 0.25rem 0; color: #2c3e50; font-size: 1.2rem; }
     .order-date { margin: 0; color: #7f8c8d; font-size: 0.9rem; }
     .status-badge { padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
-    .status-criado { background: #3498db; color: white; }
-    .status-pago { background: #27ae60; color: white; }
-    .status-enviado { background: #f39c12; color: white; }
-    .status-entregue { background: #2c3e50; color: white; }
-    .status-cancelado { background: #e74c3c; color: white; }
+    .status-pendente { background: #fff3cd; color: #856404; }
+    .status-pago { background: #cce5ff; color: #004085; }
+    .status-enviado { background: #e2d9f3; color: #5a3d8a; }
+    .status-entregue { background: #d4edda; color: #155724; }
+    .status-cancelado { background: #f8d7da; color: #721c24; }
     .order-items { padding: 1.5rem; }
     .order-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #f0f0f0; }
     .order-item:last-child { border-bottom: none; }
@@ -94,8 +94,11 @@ import { AuthService } from '../../core/services/auth.service';
     .item-pricing span:first-child { color: #7f8c8d; font-size: 0.9rem; }
     .subtotal { color: #2c3e50; font-weight: 600; min-width: 100px; }
     .order-footer { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: #f8f9fa; border-top: 2px solid #eee; }
+    .footer-left { display: flex; align-items: center; gap: 1rem; }
     .total-label { color: #7f8c8d; font-size: 1rem; }
     .total-value { color: #27ae60; font-size: 1.4rem; font-weight: 700; }
+    .btn-details { padding: 0.5rem 1.2rem; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: background 0.2s; }
+    .btn-details:hover { background: #2980b9; }
   `]
 })
 export class OrdersComponent implements OnInit {
@@ -112,9 +115,6 @@ export class OrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-  /**
-   * Busca a lista de pedidos do usuário logado.
-   */
   loadOrders(): void {
     this.orderService.getMyOrders().subscribe({
       next: (data) => {
@@ -128,23 +128,18 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  /**
-   * Retorna a classe CSS apropriada para o status do pedido.
-   */
   getStatusClass(status: string): string {
+    // Mapeamento exato com o Enum OrderStatus do seu Backend Java
     const statusMap: { [key: string]: string } = {
-      'CRIADO': 'status-criado',
+      'PENDENTE': 'status-pendente',
       'PAGO': 'status-pago',
       'ENVIADO': 'status-enviado',
       'ENTREGUE': 'status-entregue',
       'CANCELADO': 'status-cancelado'
     };
-    return statusMap[status] || 'status-criado';
+    return statusMap[status] || 'status-pendente';
   }
 
-  /**
-   * Encerra a sessão do usuário e redireciona para a tela de login.
-   */
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

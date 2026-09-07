@@ -1,7 +1,6 @@
 package com.sualoja.api.config;
 
 import com.sualoja.api.security.JwtAuthenticationFilter;
-
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,64 +26,57 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Desativa CSRF, pois APIs REST com JWT não usam cookies de sessão
             .csrf(csrf -> csrf.disable())
-            
-            // Define que a API é "STATELESS" (sem estado).
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // <-- NOVO: Configura respostas de erro padrão para APIs REST
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint((request, response, authException) -> 
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Não autenticado")) // Retorna 401
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Não autenticado"))
                 .accessDeniedHandler((request, response, accessDeniedException) -> 
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acesso negado")) // Retorna 403
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acesso negado"))
             )
-            
-            // Define as regras de quem pode acessar o quê
             .authorizeHttpRequests(auth -> auth
-                // Rotas públicas
-                .requestMatchers("/api/auth/**").permitAll()
+                // 1. ROTAS PÚBLICAS (Devem vir PRIMEIRO)
+                .requestMatchers("/api/auth/**").permitAll() // <--- AQUI ESTAVA O PROBLEMA!
                 .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
                 
-                // Permitir acesso público à documentação Swagger
+                // Documentação Swagger
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
         
-                // Rotas protegidas (só ADMIN)
+                // 2. ROTAS DE CLIENTE AUTENTICADO
+                .requestMatchers("/api/carrinho/**").authenticated()
+                .requestMatchers("/api/pedidos/meus-pedidos").authenticated()
+                .requestMatchers("/api/pedidos/finalizar").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/pedidos/{pedidoId}").authenticated() // Cliente vê seus detalhes
+        
+                // 3. ROTAS EXCLUSIVAS DE ADMINISTRADOR
                 .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMINISTRADOR")
+                
                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
+                
+                .requestMatchers("/api/pedidos/**").hasRole("ADMINISTRADOR") // Admin gerencia todos os pedidos (ex: mudar status)
         
-                // NOVAS ROTAS: Carrinho e Pedidos
-                .requestMatchers("/api/carrinho/**").authenticated()
-                .requestMatchers("/api/pedidos/meus-pedidos").authenticated()
-                .requestMatchers("/api/pedidos/finalizar").authenticated()
-                .requestMatchers("/api/pedidos/**").hasRole("ADMINISTRADOR")
-        
-                // Qualquer outra rota exige autenticação
+                // 4. QUALQUER OUTRA ROTA EXIGE AUTENTICAÇÃO
                 .anyRequest().authenticated()
             )
-            // Adiciona o nosso filtro JWT ANTES do filtro padrão de senha do Spring
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
             
         return http.build();
     }
 
-    // Expõe o gerenciador de autenticação para o AuthService usar no login
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // Define que o algoritmo de criptografia de senha será o BCrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -185,7 +185,7 @@ export class CartComponent implements OnInit {
     
     if (!confirm(`Deseja remover "${item.nomeProduto}" do carrinho?`)) return;
 
-    console.log('✅ Confirmação OK. Enviando DELETE para /api/carrinho/itens/' + item.id);
+    console.log('✅ Confirmação OK. Envsiando DELETE para /api/carrinho/itens/' + item.id);
 
     this.cartService.removeItem(item.id).subscribe({
       next: (response) => {
