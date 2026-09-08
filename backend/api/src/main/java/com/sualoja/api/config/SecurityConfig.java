@@ -63,7 +63,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
                 
                 .requestMatchers("/api/pedidos/**").hasRole("ADMINISTRADOR") // Admin gerencia todos os pedidos (ex: mudar status)
-        
+                .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
+                
                 // 4. QUALQUER OUTRA ROTA EXIGE AUTENTICAÇÃO
                 .anyRequest().authenticated()
             )

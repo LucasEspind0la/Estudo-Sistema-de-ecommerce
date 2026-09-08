@@ -4,6 +4,7 @@ import { ProductsComponent } from './features/products/products.component';
 import { CartComponent } from './features/cart/cart.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { OrderDetailsComponent } from './features/orders/order-details.component';
+import { AdminDashboardComponent } from './features/admin/admin-dashboard.component'; 
 import { AdminProductsComponent } from './features/admin/admin-products.component';
 import { AdminProductFormComponent } from './features/admin/admin-product-form.component';
 import { AdminCategoriesComponent } from './features/admin/admin-categories.component';
@@ -15,7 +16,9 @@ export const routes: Routes = [
   { path: 'produtos', component: ProductsComponent },
   { path: 'carrinho', component: CartComponent },
   { path: 'pedidos', component: OrdersComponent },
-  { path: 'pedidos/:id', component: OrderDetailsComponent }, 
+  { path: 'pedidos/:id', component: OrderDetailsComponent },
+  { path: 'admin', redirectTo: '/admin/dashboard', pathMatch: 'full' }, 
+  { path: 'admin/dashboard', component: AdminDashboardComponent }, 
   { path: 'admin/produtos', component: AdminProductsComponent },
   { path: 'admin/produtos/novo', component: AdminProductFormComponent },
   { path: 'admin/produtos/editar/:id', component: AdminProductFormComponent },
