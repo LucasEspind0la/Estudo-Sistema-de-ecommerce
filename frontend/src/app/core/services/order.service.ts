@@ -23,7 +23,6 @@ export interface Order {
   criadoEm: string;
 }
 
-// Alias para compatibilidade com outros componentes
 export type OrderResponse = Order;
 
 @Injectable({ providedIn: 'root' })
@@ -40,5 +39,14 @@ export class OrderService {
 
   getOrderById(id: number): Observable<Order> {
     return this.http.get<Order>(`/api/pedidos/${id}`);
+  }
+
+  // MÉTODO ADICIONADO PARA O ADMIN
+  getAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>('/api/pedidos');
+  }
+
+  updateOrderStatus(id: number, status: string): Observable<Order> {
+    return this.http.patch<Order>(`/api/pedidos/${id}/status?status=${status}`, {});
   }
 }

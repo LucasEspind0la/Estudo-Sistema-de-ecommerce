@@ -13,11 +13,11 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUsuarioIdOrderByCriadoEmDesc(Long usuarioId);
     List<Order> findByStatus(OrderStatus status);
-    
-    // Busca os 5 pedidos mais recentes
     List<Order> findTop5ByOrderByCriadoEmDesc();
+    
+    // Lista todos os pedidos ordenados do mais recente para o mais antigo
+    List<Order> findAllByOrderByCriadoEmDesc();
 
-    // Soma o valor total de todos os pedidos (COALESCE evita null se não houver pedidos)
     @Query("SELECT COALESCE(SUM(o.valorTotal), 0) FROM Order o")
     BigDecimal calcularFaturamentoTotal();
 }

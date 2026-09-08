@@ -21,25 +21,27 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // Finaliza o pedido (checkout)
     @PostMapping("/finalizar")
     public ResponseEntity<OrderResponse> finalizarPedido(@AuthenticationPrincipal User usuario) {
         return ResponseEntity.ok(orderService.finalizarPedido(usuario.getId()));
     }
 
-    // Lista os pedidos do usuário autenticado
     @GetMapping("/meus-pedidos")
     public ResponseEntity<List<OrderResponse>> buscarMeusPedidos(@AuthenticationPrincipal User usuario) {
         return ResponseEntity.ok(orderService.buscarPedidosPorUsuario(usuario.getId()));
     }
 
-    // Busca um pedido específico por ID
+    // NOVO: Endpoint para o Admin listar todos os pedidos
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> buscarTodosPedidos() {
+        return ResponseEntity.ok(orderService.buscarTodosPedidos());
+    }
+
     @GetMapping("/{pedidoId}")
     public ResponseEntity<OrderResponse> buscarPedidoPorId(@PathVariable Long pedidoId) {
         return ResponseEntity.ok(orderService.buscarPedidoPorId(pedidoId));
     }
 
-    // Atualiza o status do pedido (apenas ADMIN)
     @PatchMapping("/{pedidoId}/status")
     public ResponseEntity<OrderResponse> atualizarStatus(
         @PathVariable Long pedidoId,

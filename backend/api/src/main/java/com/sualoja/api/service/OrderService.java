@@ -117,4 +117,12 @@ public class OrderService {
         pedido.setStatus(novoStatus);
         return OrderResponse.deEntidade(orderRepository.save(pedido));
     }
+        // Lista todos os pedidos do sistema (para o Admin)
+    @Transactional(readOnly = true)
+    public List<OrderResponse> buscarTodosPedidos() {
+        return orderRepository.findAllByOrderByCriadoEmDesc()
+            .stream()
+            .map(OrderResponse::deEntidade)
+            .toList();
+    }
 }

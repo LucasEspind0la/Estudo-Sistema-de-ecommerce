@@ -15,6 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="header-actions">
           <button class="secondary-btn" routerLink="/admin/produtos">Gerenciar Produtos</button>
           <button class="secondary-btn" routerLink="/admin/categorias">Gerenciar Categorias</button>
+          <button class="secondary-btn" routerLink="/admin/pedidos">📦 Gerenciar Pedidos</button>
           <button class="logout-btn" (click)="logout()">Sair</button>
         </div>
       </header>
