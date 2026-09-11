@@ -25,7 +25,7 @@ export interface ProductUI extends Product {
           <button *ngIf="isAdmin" class="admin-btn" routerLink="/admin/produtos">⚙️ Admin</button>
           
           <button class="orders-btn" routerLink="/pedidos">📦 Meus Pedidos</button>
-          <button class="cart-btn" routerLink="/carrinho">🛒 Carrinho</button>
+          <button class="cart-btn" routerLink="/carrinho"> Carrinho</button>
           <button class="logout-btn" (click)="logout()">Sair</button>
         </div>
       </header>
@@ -56,13 +56,22 @@ export interface ProductUI extends Product {
                 A partir de {{ getLowestPrice(product.variantes) | currency:'BRL':'symbol':'1.2-2' }}
               </span>
             </div>
-            <button 
-              class="add-btn" 
-              (click)="addToCart(product)"
-              [disabled]="product.isAdding"
-            >
-              {{ product.isAdding ? 'Adicionando...' : 'Adicionar ao Carrinho' }}
-            </button>
+            <div class="product-actions">
+              <button 
+                class="add-btn" 
+                (click)="addToCart(product)"
+                [disabled]="product.isAdding"
+              >
+                {{ product.isAdding ? 'Adicionando...' : 'Adicionar ao Carrinho' }}
+              </button>
+              <button 
+                class="buy-now-btn" 
+                (click)="buyNow(product)"
+                [disabled]="product.isAdding"
+              >
+                Comprar Agora
+              </button>
+            </div>
             <p *ngIf="product.uiSuccessMessage" class="success-msg">{{ product.uiSuccessMessage }}</p>
             <p *ngIf="product.uiErrorMessage" class="error-msg">{{ product.uiErrorMessage }}</p>
           </div>
@@ -92,9 +101,13 @@ export interface ProductUI extends Product {
     .product-info h3 { margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.2rem; }
     .description { color: #666; font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .price { font-size: 1.4rem; font-weight: 700; color: #27ae60; }
-    .add-btn { width: 100%; padding: 0.75rem; background: #3498db; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
+    .product-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .add-btn { flex: 1; padding: 0.75rem; background: #3498db; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
     .add-btn:hover:not(:disabled) { background: #2980b9; }
     .add-btn:disabled { background: #95a5a6; cursor: not-allowed; }
+    .buy-now-btn { flex: 1; padding: 0.75rem; background: #27ae60; color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .buy-now-btn:hover:not(:disabled) { background: #219150; transform: translateY(-1px); }
+    .buy-now-btn:disabled { background: #95a5a6; cursor: not-allowed; }
     .loading, .empty { text-align: center; padding: 3rem; color: #666; font-size: 1.1rem; }
     .success-msg { color: #27ae60; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; font-weight: 600; }
     .error-msg { color: #e74c3c; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; font-weight: 600; }
@@ -110,7 +123,7 @@ export class ProductsComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private authService: AuthService, // Pode continuar private agora!
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -174,10 +187,54 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  /**
+   * Adiciona o produto ao carrinho e redireciona imediatamente para o checkout.
+   */
+  buyNow(product: ProductUI): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!product.variantes || product.variantes.length === 0) {
+      product.uiErrorMessage = 'Produto sem variantes disponíveis.';
+      setTimeout(() => product.uiErrorMessage = '', 4000);
+      return;
+    }
+
+    product.isAdding = true;
+    product.uiSuccessMessage = '';
+    product.uiErrorMessage = '';
+
+    const primeiraVariante = product.variantes[0];
+    const request: AddToCartRequest = {
+      varianteId: primeiraVariante.id,
+      quantidade: 1
+    };
+
+    this.cartService.addToCart(request).subscribe({
+      next: () => {
+        product.isAdding = false;
+        // Redireciona imediatamente para o carrinho
+        this.router.navigate(['/carrinho']);
+      },
+      error: (err) => {
+        product.isAdding = false;
+        if (err.status === 401) {
+          this.router.navigate(['/login']);
+        } else if (err.status === 400) {
+          product.uiErrorMessage = '❌ Estoque insuficiente.';
+        } else {
+          product.uiErrorMessage = '❌ Erro ao processar compra.';
+        }
+        setTimeout(() => product.uiErrorMessage = '', 4000);
+        console.error('Erro ao comprar agora:', err);
+      }
+    });
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
-  
 }
