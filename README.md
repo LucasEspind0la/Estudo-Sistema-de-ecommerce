@@ -80,25 +80,6 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 
 ---
 
-## 🚀 Como Rodar o Projeto
-
-### Pré-requisitos
-- JDK 17+ e Maven
-- Node.js 18+ e Angular CLI
-- PostgreSQL rodando na porta 5432
-
-### 1. Backend
-```bash
-cd backend/api
-mvn spring-boot:run
-
-
-2. Frontend
-
-cd frontend
-ng serve -o
-
-
 
 
 📂 Estrutura do Projeto
@@ -123,9 +104,34 @@ Vendas/
 
 
 
+---
 
 
-		🔜 Próximos Passos
+
+## 🚀 Como Rodar o Projeto
+
+### Pré-requisitos
+- JDK 17+ e Maven
+- Node.js 18+ e Angular CLI
+- PostgreSQL rodando na porta 5432
+
+### 1. Backend
+```bash
+cd backend/api
+mvn spring-boot:run
+
+
+2. Frontend
+
+cd frontend
+ng serve -o
+
+
+
+---
+
+
+🔜 Próximos Passos
 
     Deploy em nuvem (Vercel + Render)
     Integração com gateway de pagamento
