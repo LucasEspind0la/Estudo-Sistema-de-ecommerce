@@ -23,24 +23,20 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 <img src="docs/screenshots/login.png" alt="Tela de Login" width="800"/>
 </div>
 
-
 ### 🏪 Página Inicial da Loja
 <div align="center">
 <img src="docs/screenshots/pageInicial.png" alt="Página Inicial" width="800"/>
 </div>
-
 
 ### 🛍️ Catálogo de Produtos
 <div align="center">
 <img src="docs/screenshots/produtos.png" alt="Catálogo de Produtos" width="800"/>
 </div>
 
-
 ### 📊 Painel Administrativo (Dashboard)
 <div align="center">
 <img src="docs/screenshots/dashboard.png" alt="Dashboard Administrativo" width="800"/>
 </div>
-
 
 ### 🛒 Carrinho de Compras
 <div align="center">
@@ -58,7 +54,7 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 - ✅ Checkout com baixa automática de estoque
 - ✅ Histórico de Pedidos com detalhes
 
-### ️ Módulo do Administrador
+### 🛠️ Módulo do Administrador
 - ✅ Dashboard com métricas (Faturamento, Pedidos, Estoque Baixo)
 - ✅ CRUD Completo de Produtos com Upload de Imagens
 - ✅ CRUD de Categorias
@@ -66,7 +62,6 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 - ✅ Controle de acesso RBAC
 
 ---
-
 
 ## 🛠️ Stack Tecnológica
 
@@ -80,52 +75,43 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 
 ---
 
-
 ## 📂 Estrutura do Projeto
 
-
+```text
 Vendas/
-│
 ├── backend/api/
 │   ├── src/main/java/com/sualoja/api/
-│   │   ├── config/        # Configurações globais (Security, JWT, CORS, Swagger)
-│   │   ├── controller/    # Endpoints REST (7 controllers)
-│   │   ├── dto/           # Objetos de transferência (Requests e Responses)
-│   │   ├── exception/     # Tratamento global de erros (GlobalExceptionHandler)
-│   │   ├── model/         # Entidades JPA e Enums do domínio
-│   │   ├── repository/    # Interfaces Spring Data JPA
-│   │   ├── security/      # Filtros JWT e CustomUserDetailsService
-│   │   └── service/       # Regras de negócio encapsuladas
+│   │   ├── config/           # Security, JWT, CORS, Swagger
+│   │   ├── controller/       # Endpoints REST (7 controllers)
+│   │   ├── dto/              # Request e Response DTOs
+│   │   ├── exception/        # Tratamento global de erros
+│   │   ├── model/            # Entidades JPA e Enums
+│   │   ├── repository/       # Interfaces Spring Data JPA
+│   │   ├── security/         # Filtros JWT e UserDetailsService
+│   │   └── service/          # Regras de negócio
 │   ├── src/main/resources/
-│   │   ├── application.yml        # Configurações da aplicação
-│   │   └── db/migration/          # Scripts de versionamento do banco (Flyway)
-│   ├── src/test/                  # Testes unitários e de integração (JUnit/Mockito)
-│   └── uploads/produtos/          # Armazenamento local das imagens enviadas
+│   │   ├── application.yml   # Configurações da aplicação
+│   │   └── db/migration/     # Versionamento do banco (Flyway)
+│   ├── src/test/             # Testes unitários e de integração
+│   └── uploads/produtos/     # Imagens dos produtos
 │
 ├── frontend/
-│   ├── src/app/
-│   │   ├── core/                  # Camada de infraestrutura
-│   │   │   ├── interceptors/      # Injeção automática do token JWT
-│   │   │   └── services/          # Comunicação reativa com a API (RxJS)
-│   │   └── features/              # Componentes de UI (Standalone Components)
-│   │       ├── admin/             # Dashboard, CRUD de Produtos e Categorias
-│   │       ├── cart/              # Carrinho de compras
-│   │       ├── login/             # Tela unificada de Login/Cadastro
-│   │       ├── orders/            # Histórico e detalhes de pedidos
-│   │       ├── products/          # Catálogo com Hero Carousel
-│   │       └── shared/            # Componentes reutilizáveis
-│   ├── proxy.conf.json            # Configuração de proxy para desenvolvimento
-│   └── package.json               # Dependências do Frontend
+│   └── src/app/
+│       ├── core/             # Serviços, Interceptors (JWT), Models
+│       └── features/         # Componentes de UI (Standalone)
+│           ├── admin/        # Dashboard, CRUD Produtos/Categorias
+│           ├── cart/         # Carrinho de compras
+│           ├── login/        # Tela de Login/Cadastro
+│           ├── orders/       # Lista e detalhes de pedidos
+│           ├── products/     # Catálogo com Hero Carousel
+│           └── shared/       # Componentes reutilizáveis
 │
-├── docs/screenshots/              # Imagens ilustrativas do sistema em execução
-└── README.md                      # Documentação principal do projeto
-
-
-
+├── docs/
+│   └── screenshots/          # Imagens ilustrativas do sistema
+└── README.md                 # Este arquivo
 
 
 ---
-
 
 
 ## 🚀 Como Rodar o Projeto
