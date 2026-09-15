@@ -82,25 +82,193 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 
 
 
-📂 Estrutura do Projeto
-
-
 Vendas/
-├── backend/
-│   └── api/
-│       ├── src/main/java/com/sualoja/api/
-│       │   ├── config/          # Security, JWT, CORS
-│       │   ├── controller/      # Endpoints REST
-│       │   ├── dto/             # Request/Response
-│       │   ├── model/           # Entidades JPA
-│       │   ├── repository/      # Spring Data JPA
-│       │   └── service/         # Regras de negócio
-│       ── uploads/             # Imagens dos produtos
 │
-└── frontend/
-    └── src/app/
-        ├── core/                # Serviços, Interceptors
-        └── features/            # Componentes UI
+├── 📁 backend/
+│   └── 📁 api/
+│       ├── 📁 .mvn/wrapper/              # Wrapper do Maven (build)
+│       ├── 📁 src/
+│       │   ├── 📁 main/
+│       │   │   ├── 📁 java/com/sualoja/api/
+│       │   │   │   ├── 📁 config/                    # Configurações globais
+│       │   │   │   │   ├── OpenApiConfig.java        # Swagger/OpenAPI
+│       │   │   │   │   ├── SecurityConfig.java       # Spring Security + JWT
+│       │   │   │   │   └── WebConfig.java            # CORS e recursos estáticos
+│       │   │   │   │
+│       │   │   │   ├── 📁 controller/                # Endpoints REST
+│       │   │   │   │   ├── AuthController.java       # Login/Cadastro
+│       │   │   │   │   ├── CartController.java       # Carrinho
+│       │   │   │   │   ├── CategoryController.java   # Categorias
+│       │   │   │   │   ├── DashboardController.java  # Métricas admin
+│       │   │   │   │   ├── OrderController.java      # Pedidos
+│       │   │   │   │   ├── ProductController.java    # Produtos
+│       │   │   │   │   └── ProductVariantController.java # Variações
+│       │   │   │   │
+│       │   │   │   ├──  dto/                       # Data Transfer Objects
+│       │   │   │   │   ├──  request/               # Requisições
+│       │   │   │   │   │   ├── AddToCartRequest.java
+│       │   │   │   │   │   ├── CadastroRequest.java
+│       │   │   │   │   │   ├── CheckoutRequest.java
+│       │   │   │   │   │   ├── CreateCategoryRequest.java
+│       │   │   │   │   │   ├── CreateProductRequest.java
+│       │   │   │   │   │   ├── CreateProductVariantRequest.java
+│       │   │   │   │   │   ├── LoginRequest.java
+│       │   │   │   │   │   ├── ProductRequest.java
+│       │   │   │   │   │   ├── ProductVariantRequest.java
+│       │   │   │   │   │   ├── UpdateCartItemRequest.java
+│       │   │   │   │   │   ├── UpdateCategoryRequest.java
+│       │   │   │   │   │   ├── UpdateProductRequest.java
+│       │   │   │   │   │   └── UpdateProductVariantRequest.java
+│       │   │   │   │   │
+│       │   │   │   │   └── 📁 response/              # Respostas
+│       │   │   │   │       ├── AuthResponse.java
+│       │   │   │   │       ├── CartItemResponse.java
+│       │   │   │   │       ├── CartResponse.java
+│       │   │   │   │       ├── CategoryResponse.java
+│       │   │   │   │       ├── DashboardResponse.java
+│       │   │   │   │       ├── OrderItemResponse.java
+│       │   │   │   │       ├── OrderResponse.java
+│       │   │   │   │       ├── ProductResponse.java
+│       │   │   │   │       └── ProductVariantResponse.java
+│       │   │   │   │
+│       │   │   │   ├── 📁 exception/                 # Tratamento de erros
+│       │   │   │   │   ├── GlobalExceptionHandler.java
+│       │   │   │   │   └── ResourceNotFoundException.java
+│       │   │   │   │
+│       │   │   │   ├── 📁 model/                     # Entidades e Enums
+│       │   │   │   │   ├── 📁 entity/
+│       │   │   │   │   │   ├── Cart.java
+│       │   │   │   │   │   ├── CartItem.java
+│       │   │   │   │   │   ├── Category.java
+│       │   │   │   │   │   ├── Order.java
+│       │   │   │   │   │   ├── OrderItem.java
+│       │   │   │   │   │   ├── Product.java
+│       │   │   │   │   │   ├── ProductVariant.java
+│       │   │   │   │   │   └── User.java
+│       │   │   │   │   │
+│       │   │   │   │   └── 📁 enums/
+│       │   │   │   │       ├── CartStatus.java
+│       │   │   │   │       ├── OrderStatus.java
+│       │   │   │   │       └── UserRole.java
+│       │   │   │   │
+│       │   │   │   ├── 📁 repository/                # Spring Data JPA
+│       │   │   │   │   ├── CartItemRepository.java
+│       │   │   │   │   ├── CartRepository.java
+│       │   │   │   │   ├── CategoryRepository.java
+│       │   │   │   │   ├── OrderItemRepository.java
+│       │   │   │   │   ├── OrderRepository.java
+│       │   │   │   │   ├── ProductRepository.java
+│       │   │   │   │   ├── ProductVariantRepository.java
+│       │   │   │   │   └── UserRepository.java
+│       │   │   │   │
+│       │   │   │   ├── 📁 security/                  # Autenticação JWT
+│       │   │   │   │   ├── CustomUserDetailsService.java
+│       │   │   │   │   ├── JwtAuthenticationFilter.java
+│       │   │   │   │   └── JwtService.java
+│       │   │   │   │
+│       │   │   │   ├── 📁 service/                   # Regras de negócio
+│       │   │   │   │   ├── AuthService.java
+│       │   │   │   │   ├── CartService.java
+│       │   │   │   │   ├── CategoryService.java
+│       │   │   │   │   ├── FileStorageService.java
+│       │   │   │   │   ├── OrderService.java
+│       │   │   │   │   ├── ProductService.java
+│       │   │   │   │   └── ProductVariantService.java
+│       │   │   │   │
+│       │   │   │   └── ApiApplication.java           # Classe principal
+│       │   │   │
+│       │   │   └── 📁 resources/
+│       │   │       ├── application.yml               # Configuração principal
+│       │   │       └──  db/migration/              # Flyway (versionamento)
+│       │   │           ├── V1__create_initial_tables.sql
+│       │   │           └── V4__add_image_url_to_products.sql
+│       │   │
+│       │   └── 📁 test/                              # Testes automatizados
+│       │       ├── 📁 java/com/sualoja/api/
+│       │       │   ├── ApiApplicationTests.java
+│       │       │   ├── 📁 integration/
+│       │       │   │   ├── AuthIntegrationTest.java
+│       │       │   │   ├── CartIntegrationTest.java
+│       │       │   │   ├── OrderIntegrationTest.java
+│       │       │   │   └── ProductIntegrationTest.java
+│       │       │   ── 📁 service/
+│       │       │       └── OrderServiceTest.java
+│       │       └── 📁 resources/
+│       │           └── application.yml               # Config de testes (H2)
+│       │
+│       ├── 📁 uploads/produtos/                      # Imagens enviadas
+│       ├── pom.xml                                   # Dependências Maven
+│       └── configuracao-testes-h2.yml                # Config H2 para testes
+│
+├── 📁 frontend/
+│   ├── 📁 public/                                    # Assets estáticos
+│   │   ── favicon.ico
+│   │
+│   ├── 📁 src/
+│   │   ├── 📁 app/
+│   │   │   ├── 📁 core/                              # Camada de infraestrutura
+│   │   │   │   ├── 📁 interceptors/
+│   │   │   │   │   ── auth.interceptor.ts           # Injeta JWT automaticamente
+│   │   │   │   │
+│   │   │   │   └── 📁 services/                      # Comunicação com API
+│   │   │   │       ├── auth.service.ts
+│   │   │   │       ├── cart.service.ts
+│   │   │   │       ├── category.service.ts
+│   │   │   │       ├── dashboard.service.ts
+│   │   │   │       ├── order.service.ts
+│   │   │   │       └── product.service.ts
+│   │   │   │
+│   │   │   ├── 📁 features/                          # Componentes de UI
+│   │   │   │   ├── 📁 admin/                         # Painel administrativo
+│   │   │   │   │   ├── admin-categories.component.ts
+│   │   │   │   │   ├── admin-category-form.component.ts
+│   │   │   │   │   ├── admin-dashboard.component.ts
+│   │   │   │   │   ├── admin-orders.component.ts
+│   │   │   │   │   ├── admin-product-form.component.ts
+│   │   │   │   │   └── admin-products.component.ts
+│   │   │   │   │
+│   │   │   │   ├──  cart/                          # Carrinho de compras
+│   │   │   │   │   └── cart.component.ts
+│   │   │   │   │
+│   │   │   │   ├──  login/                         # Autenticação
+│   │   │   │   │   └── login.component.ts
+│   │   │   │   │
+│   │   │   │   ├──  orders/                        # Pedidos do cliente
+│   │   │   │   │   ├── order-details.component.ts
+│   │   │   │   │   └── orders.component.ts
+│   │   │   │   │
+│   │   │   │   ├── 📁 products/                      # Catálogo
+│   │   │   │   │   └── products.component.ts
+│   │   │   │   │
+│   │   │   │   └── 📁 shared/                        # Componentes reutilizáveis
+│   │   │   │       └── hero-carousel.component.ts
+│   │   │   │
+│   │   │   ├── app.component.ts                      # Componente raiz
+│   │   │   ├── app.config.ts                         # Configuração Angular
+│   │   │   └── app.routes.ts                         # Rotas da aplicação
+│   │   │
+│   │   ├── index.html                                # HTML principal
+│   │   ├── main.ts                                   # Bootstrap Angular
+│   │   └── styles.scss                               # Estilos globais
+│   │
+│   ├── angular.json                                  # Config do Angular CLI
+│   ├── package.json                                  # Dependências npm
+│   ├── proxy.conf.json                               # Proxy para backend
+│   ├── tsconfig.json                                 # Config TypeScript
+│   ├── tsconfig.app.json
+│   └── tsconfig.spec.json
+│
+├── 📁 docs/
+│   └── 📁 screenshots/                               # Imagens do README
+│       ├── carrinho.png
+│       ├── criacaoDeCategorias.png
+│       ├── criacaoDeProdutos.png
+│       ├── dashboard.png
+│       ├── login.png
+│       ├── pageInicial.png
+│       └── produtos.png
+│
+└── README.md                                         # Documentação principal
 
 
 
