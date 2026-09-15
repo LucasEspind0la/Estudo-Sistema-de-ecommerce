@@ -28,16 +28,6 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 <img src="docs/screenshots/dashboard.png" alt="Dashboard Administrativo" width="800"/>
 </div>
 
-### 🏷️ Gerenciamento de Produtos
-<div align="center">
-<img src="docs/screenshots/criacaoDeProdutos.png" alt="Gerenciamento de Produtos" width="800"/>
-</div>
-
-### 📂 Gerenciamento de Categorias
-<div align="center">
-<img src="docs/screenshots/criacaoDeCategorias.png" alt="Gerenciamento de Categorias" width="800"/>
-</div>
-
 ### 🛒 Carrinho de Compras
 <div align="center">
 <img src="docs/screenshots/carrinho.png" alt="Carrinho de Compras" width="800"/>
