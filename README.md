@@ -284,3 +284,24 @@ Vendas/
     Integração com Gateway de Pagamento: (ex: Mercado Pago ou Stripe).
     Deploy em Nuvem: Backend (Render/Railway), Frontend (Vercel/Netlify) e Banco (Neon/Supabase).
     CI/CD: Pipeline de integração contínua com GitHub Actions.
+
+---
+
+## 📸 Screenshots do Sistema
+
+### 🔐 Tela de Login
+![Login](docs/screenshots/login.png)
+
+### 📊 Painel Administrativo (Dashboard)
+![Dashboard](docs/screenshots/dashboard-admin.png)
+
+### 🏷️ Gerenciamento de Produtos
+![Produtos](docs/screenshots/gerenciar-produtos.png)
+
+### 📂 Gerenciamento de Categorias
+![Categorias](docs/screenshots/gerenciar-categorias.png)
+
+###  Carrinho de Compras
+![Carrinho](docs/screenshots/carrinho.png)
+
+---
