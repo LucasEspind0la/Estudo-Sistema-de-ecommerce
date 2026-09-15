@@ -115,8 +115,10 @@ Vendas/
 - Node.js 18+ e Angular CLI
 - PostgreSQL rodando na porta 5432
 
-### 1. Backend
-```bash
+
+1. backend
+
+
 cd backend/api
 mvn spring-boot:run
 
@@ -126,6 +128,20 @@ mvn spring-boot:run
 cd frontend
 ng serve -o
 
+
+
+Admin:
+	
+admin@teste.com
+	
+123456
+
+
+Cliente:
+	
+lucas@teste.com
+	
+123456
 
 
 ---
