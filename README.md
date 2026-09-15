@@ -1,5 +1,5 @@
 cat << 'EOF' > ~/Área\ de\ Trabalho/Vendas/README.md
-#  Sistema de E-commerce Full Stack - API RESTful & Angular
+# 🛒 Sistema de E-commerce Full Stack - API RESTful & Angular
 
 <div align="center">
 
@@ -14,7 +14,7 @@ cat << 'EOF' > ~/Área\ de\ Trabalho/Vendas/README.md
 
 Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Backend) e **Angular** (Frontend). O projeto implementa um fluxo real de vendas, desde o gerenciamento de produtos pelo administrador até a finalização de compra pelo cliente, com autenticação segura via JWT e controle de acesso baseado em papéis (RBAC).
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
 ## 📸 Screenshots do Sistema
 
@@ -25,17 +25,17 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 
 ### 📊 Painel Administrativo (Dashboard)
 <div align="center">
-<img src="docs/screenshots/dashboard-admin.png" alt="Dashboard Administrativo" width="800"/>
+<img src="docs/screenshots/dashboard.png" alt="Dashboard Administrativo" width="800"/>
 </div>
 
 ### 🏷️ Gerenciamento de Produtos
 <div align="center">
-<img src="docs/screenshots/gerenciar-produtos.png" alt="Gerenciamento de Produtos" width="800"/>
+<img src="docs/screenshots/criacaoDeProdutos.png" alt="Gerenciamento de Produtos" width="800"/>
 </div>
 
 ### 📂 Gerenciamento de Categorias
 <div align="center">
-<img src="docs/screenshots/gerenciar-categorias.png" alt="Gerenciamento de Categorias" width="800"/>
+<img src="docs/screenshots/criacaoDeCategorias.png" alt="Gerenciamento de Categorias" width="800"/>
 </div>
 
 ### 🛒 Carrinho de Compras
@@ -43,7 +43,17 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 <img src="docs/screenshots/carrinho.png" alt="Carrinho de Compras" width="800"/>
 </div>
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+### 🏪 Página Inicial da Loja
+<div align="center">
+<img src="docs/screenshots/pageInicial.png" alt="Página Inicial" width="800"/>
+</div>
+
+### 🛍️ Catálogo de Produtos
+<div align="center">
+<img src="docs/screenshots/produtos.png" alt="Catálogo de Produtos" width="800"/>
+</div>
+
+---
 
 ## ✨ Funcionalidades Principais
 
@@ -54,14 +64,15 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 - ✅ Checkout com baixa automática de estoque
 - ✅ Histórico de Pedidos com detalhes
 
-### 🛠️ Módulo do Administrador
+### ️ Módulo do Administrador
 - ✅ Dashboard com métricas (Faturamento, Pedidos, Estoque Baixo)
 - ✅ CRUD Completo de Produtos com Upload de Imagens
 - ✅ CRUD de Categorias
 - ✅ Gestão de Status de Pedidos
 - ✅ Controle de acesso RBAC
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
+
 
 ## 🛠️ Stack Tecnológica
 
@@ -73,9 +84,9 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 | **Frontend** | Angular 17+, TypeScript, RxJS | SPA moderna |
 | **Testes** | JUnit 5, Mockito, MockMvc | Testes automatizados |
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
-##  Como Rodar o Projeto
+## 🚀 Como Rodar o Projeto
 
 ### Pré-requisitos
 - JDK 17+ e Maven
@@ -88,58 +99,43 @@ cd backend/api
 mvn spring-boot:run
 
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Frontend
 
-Admin
-	
-admin@teste.com
-	
-123456
-Cliente
-	
-lucas@teste.com
-	
-123456
+cd frontend
+ng serve -o
 
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+📂 Estrutura do Projeto
 
 
 Vendas/
 ├── backend/
 │   └── api/
 │       ├── src/main/java/com/sualoja/api/
-│       │   ├── config/              # Configurações (CORS, Security, JWT, OpenAPI)
-│       │   ├── controller/          # Endpoints REST
-│       │   ├── dto/                 # Data Transfer Objects (Request/Response)
-│       │   ├── exception/           # Tratamento global de erros
-│       │   ├── model/               # Entidades JPA e Enums
-│       │   ├── repository/          # Interfaces Spring Data JPA
-│       │   ├── security/            # Filtro JWT e UserDetailsService
-│       │   └── service/             # Regras de negócio (FileStorage, Cart, Order)
-│       ├── src/main/resources/
-│       │   ├── application.yml      # Configuração da aplicação (PostgreSQL)
-│       │   └── db/migration/        # Scripts de versionamento Flyway
-│       ├── src/test/                # Testes automatizados (JUnit 5, Mockito, H2, MockMvc)
-│       └── uploads/                 # Diretório local para armazenamento de imagens
+│       │   ├── config/          # Security, JWT, CORS
+│       │   ├── controller/      # Endpoints REST
+│       │   ├── dto/             # Request/Response
+│       │   ├── model/           # Entidades JPA
+│       │   ├── repository/      # Spring Data JPA
+│       │   └── service/         # Regras de negócio
+│       ── uploads/             # Imagens dos produtos
 │
-├── frontend/
-│   └── src/app/
-│       ├── core/                    # Serviços (Auth, Product, Cart, Order), Interceptors, Models
-│       ├── features/                # Componentes de UI (Login, Produtos, Carrinho, Pedidos, Admin)
-│       └── app.routes.ts            # Configuração de rotas e Guards de proteção
-│
-└── README.md
-
-
------------------------------------------------------------------------------------------------------------------------------------------------------------
+└── frontend/
+    └── src/app/
+        ├── core/                # Serviços, Interceptors
+        └── features/            # Componentes UI
 
 
 
-🔜 Próximos Passos
+
+
+		🔜 Próximos Passos
 
     Deploy em nuvem (Vercel + Render)
     Integração com gateway de pagamento
     Busca e filtros avançados
     Notificações Toast
+
+	
