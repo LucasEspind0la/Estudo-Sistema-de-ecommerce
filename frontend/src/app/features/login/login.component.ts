@@ -7,7 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="login-container">
       <div class="login-card">
@@ -72,33 +72,33 @@ import { AuthService } from '../../core/services/auth.service';
     </div>
   `,
   styles: [`
-    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Segoe UI', sans-serif; padding: 1rem; }
-    .login-card { background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 420px; }
-    .header { text-align: center; margin-bottom: 1.5rem; }
-    .header h1 { margin: 0; color: #2c3e50; font-size: 2rem; }
-    .subtitle { color: #7f8c8d; margin-top: 0.5rem; font-size: 0.95rem; }
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f6f6f6; font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; padding: 1rem; }
+    .login-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); width: 100%; max-width: 420px; }
+    .header { text-align: center; margin-bottom: 1.75rem; }
+    .header h1 { margin: 0; color: #111; font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+    .subtitle { color: #888; margin-top: 0.5rem; font-size: 0.9rem; }
     
-    .toggle-container { display: flex; background: #f1f3f5; border-radius: 8px; padding: 4px; margin-bottom: 1.5rem; }
-    .toggle-btn { flex: 1; padding: 0.6rem; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-weight: 600; color: #7f8c8d; transition: all 0.2s; }
-    .toggle-btn.active { background: white; color: #2c3e50; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .toggle-container { display: flex; background: #f1f1f1; border-radius: 30px; padding: 4px; margin-bottom: 1.5rem; }
+    .toggle-btn { flex: 1; padding: 0.6rem; border: none; background: transparent; border-radius: 30px; cursor: pointer; font-weight: 600; color: #888; transition: all 0.2s; }
+    .toggle-btn.active { background: #111; color: #fff; }
     
     .auth-form { display: flex; flex-direction: column; gap: 1rem; }
     .form-group { display: flex; flex-direction: column; }
-    label { font-size: 0.85rem; font-weight: 600; color: #2c3e50; margin-bottom: 0.4rem; }
-    input { padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; transition: border-color 0.2s; }
-    input:focus { outline: none; border-color: #3498db; }
-    .error-msg { color: #e74c3c; font-size: 0.75rem; margin-top: 0.25rem; }
+    label { font-size: 0.8rem; font-weight: 700; color: #111; margin-bottom: 0.4rem; letter-spacing: 0.3px; }
+    input { padding: 0.85rem 1rem; border: 1.5px solid #e5e5e5; border-radius: 12px; font-size: 1rem; transition: border-color 0.2s; background: #fafafa; }
+    input:focus { outline: none; border-color: #111; background: #fff; }
+    .error-msg { color: #e74c3c; font-size: 0.75rem; margin-top: 0.3rem; font-weight: 600; }
     
-    .submit-btn { padding: 0.9rem; background: #27ae60; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
-    .submit-btn:hover:not(:disabled) { background: #219150; }
-    .submit-btn:disabled { background: #95a5a6; cursor: not-allowed; }
+    .submit-btn { padding: 0.95rem; background: #111; color: white; border: none; border-radius: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 0.5rem; }
+    .submit-btn:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+    .submit-btn:disabled { background: #bbb; cursor: not-allowed; }
     
-    .footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #7f8c8d; }
-    .footer a { color: #3498db; cursor: pointer; font-weight: 600; text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
+    .footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #888; }
+    .footer a { color: #111; cursor: pointer; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+    .footer a:hover { opacity: 0.7; }
     
-    .alert { padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; text-align: center; font-weight: 600; }
-    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .alert { padding: 0.8rem; border-radius: 12px; font-size: 0.85rem; text-align: center; font-weight: 600; }
+    .error { background: #fdecea; color: #c0392b; border: 1px solid #f5c6cb; }
   `]
 })
 export class LoginComponent {

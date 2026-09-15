@@ -14,7 +14,7 @@ import { AuthService } from '../../core/services/auth.service';
       <header class="header">
         <h1>Meu Carrinho</h1>
         <div class="header-actions">
-          <button class="secondary-btn" routerLink="/produtos">Continuar Comprando</button>
+          <button class="secondary-btn" routerLink="/produtos">← Continuar Comprando</button>
           <button class="logout-btn" (click)="logout()">Sair</button>
         </div>
       </header>
@@ -35,7 +35,7 @@ import { AuthService } from '../../core/services/auth.service';
 
             <div class="item-controls">
               <div class="quantity-control">
-                <button class="qty-btn" (click)="updateQuantity(item, item.quantidade - 1)" [disabled]="item.quantidade <= 1">-</button>
+                <button class="qty-btn" (click)="updateQuantity(item, item.quantidade - 1)" [disabled]="item.quantidade <= 1">−</button>
                 <span class="qty-value">{{ item.quantidade }}</span>
                 <button class="qty-btn" (click)="updateQuantity(item, item.quantidade + 1)">+</button>
               </div>
@@ -72,49 +72,53 @@ import { AuthService } from '../../core/services/auth.service';
 
       <div *ngIf="!loading && (!cart || cart.itens.length === 0) && !successMessage" class="empty-cart">
         <p>Seu carrinho está vazio.</p>
-        <button class="secondary-btn" routerLink="/produtos">Ir para a Loja</button>
+        <button class="secondary-btn dark" routerLink="/produtos">Ir para a Loja</button>
       </div>
     </div>
   `,
   styles: [`
-    .cart-container { padding: 2rem; max-width: 1000px; margin: 0 auto; font-family: 'Segoe UI', sans-serif; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
-    .header h1 { color: #2c3e50; margin: 0; }
-    .header-actions { display: flex; gap: 1rem; }
-    .secondary-btn { padding: 0.5rem 1rem; background: #ecf0f1; color: #2c3e50; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
-    .secondary-btn:hover { background: #bdc3c7; }
-    .logout-btn { padding: 0.5rem 1rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .cart-container { padding: 2rem; max-width: 1000px; margin: 0 auto; font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; background: #fff; min-height: 100vh; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #f0f0f0; }
+    .header h1 { color: #111; margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
+    .header-actions { display: flex; gap: 0.75rem; }
+    .secondary-btn { padding: 0.5rem 1rem; background: #fff; color: #111; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; }
+    .secondary-btn:hover { border-color: #111; }
+    .secondary-btn.dark { background: #111; color: #fff; border: none; padding: 0.75rem 1.5rem; font-size: 0.95rem; }
+    .secondary-btn.dark:hover { background: #333; }
+    .logout-btn { padding: 0.5rem 1rem; background: #fff; color: #e74c3c; border: 1px solid #e74c3c; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+    .logout-btn:hover { background: #e74c3c; color: #fff; }
     .cart-content { display: flex; gap: 2rem; flex-wrap: wrap; }
     .cart-items { flex: 2; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); gap: 1rem; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); gap: 1rem; transition: box-shadow 0.2s; }
+    .cart-item:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
     .item-info { flex: 2; }
-    .item-info h3 { margin: 0 0 0.25rem 0; color: #2c3e50; font-size: 1.1rem; }
-    .variant { color: #7f8c8d; font-size: 0.9rem; margin: 0 0 0.25rem 0; }
-    .unit-price { color: #2c3e50; font-size: 0.85rem; margin: 0; font-weight: 500; }
-    .item-controls { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-    .quantity-control { display: flex; align-items: center; gap: 0.5rem; background: #f8f9fa; padding: 0.25rem; border-radius: 6px; }
-    .qty-btn { width: 32px; height: 32px; background: white; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.1rem; color: #2c3e50; display: flex; align-items: center; justify-content: center; }
-    .qty-btn:hover:not(:disabled) { background: #3498db; color: white; border-color: #3498db; }
-    .qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .qty-value { min-width: 30px; text-align: center; font-weight: 600; font-size: 1rem; }
-    .remove-btn { padding: 0.4rem 0.8rem; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
-    .remove-btn:hover { background: #c0392b; }
+    .item-info h3 { margin: 0 0 0.25rem 0; color: #111; font-size: 1.05rem; font-weight: 600; }
+    .variant { color: #888; font-size: 0.85rem; margin: 0 0 0.25rem 0; }
+    .unit-price { color: #555; font-size: 0.85rem; margin: 0; font-weight: 500; }
+    .item-controls { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    .quantity-control { display: flex; align-items: center; gap: 0.5rem; background: #f6f6f6; padding: 0.3rem; border-radius: 30px; }
+    .qty-btn { width: 32px; height: 32px; background: white; border: none; border-radius: 50%; cursor: pointer; font-weight: 700; font-size: 1.1rem; color: #111; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .qty-btn:hover:not(:disabled) { background: #111; color: white; }
+    .qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .qty-value { min-width: 30px; text-align: center; font-weight: 700; font-size: 1rem; color: #111; }
+    .remove-btn { padding: 0.4rem 1rem; background: #fff; color: #e74c3c; border: 1px solid #e74c3c; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
+    .remove-btn:hover { background: #e74c3c; color: #fff; }
     .item-subtotal { flex: 1; text-align: right; min-width: 100px; }
-    .subtotal-label { display: block; color: #7f8c8d; font-size: 0.8rem; margin-bottom: 0.25rem; }
-    .subtotal-value { color: #27ae60; font-weight: 700; font-size: 1.1rem; }
-    .cart-summary { flex: 1; min-width: 250px; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: fit-content; }
-    .cart-summary h2 { margin-top: 0; color: #2c3e50; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-    .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: #7f8c8d; }
-    .summary-row.total { font-size: 1.2rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #eee; padding-top: 0.75rem; margin-top: 0.75rem; }
-    .checkout-btn { width: 100%; padding: 1rem; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
-    .checkout-btn:hover:not(:disabled) { background: #219150; }
-    .checkout-btn:disabled { background: #95a5a6; cursor: not-allowed; }
-    .empty-cart { text-align: center; padding: 4rem 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .empty-cart p { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 1.5rem; }
-    .loading { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; }
-    .alert { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; text-align: center; font-weight: 600; }
-    .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .subtotal-label { display: block; color: #888; font-size: 0.75rem; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .subtotal-value { color: #111; font-weight: 700; font-size: 1.1rem; }
+    .cart-summary { flex: 1; min-width: 250px; background: white; padding: 1.75rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); height: fit-content; position: sticky; top: 2rem; }
+    .cart-summary h2 { margin-top: 0; color: #111; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid #f0f0f0; padding-bottom: 0.75rem; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: #888; font-size: 0.9rem; }
+    .summary-row.total { font-size: 1.25rem; font-weight: 700; color: #111; border-top: 1px solid #f0f0f0; padding-top: 0.75rem; margin-top: 0.75rem; }
+    .checkout-btn { width: 100%; padding: 1rem; background: #111; color: white; border: none; border-radius: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: background 0.2s, transform 0.15s; }
+    .checkout-btn:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+    .checkout-btn:disabled { background: #bbb; cursor: not-allowed; }
+    .empty-cart { text-align: center; padding: 4rem 2rem; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .empty-cart p { font-size: 1.15rem; color: #888; margin-bottom: 1.5rem; }
+    .loading { text-align: center; padding: 3rem; color: #999; font-size: 1rem; }
+    .alert { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; }
+    .success { background: #eafaf1; color: #27ae60; border: 1px solid #c3e6cb; }
+    .error { background: #fdecea; color: #c0392b; border: 1px solid #f5c6cb; }
   `]
 })
 export class CartComponent implements OnInit {

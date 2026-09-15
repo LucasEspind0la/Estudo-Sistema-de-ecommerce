@@ -65,28 +65,29 @@ import { AuthService } from '../../core/services/auth.service';
       </div>
     </div>
   `,
-  styles: [`
-    .admin-container { padding: 2rem; max-width: 1200px; margin: 0 auto; font-family: 'Segoe UI', sans-serif; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
-    .header h1 { color: #2c3e50; margin: 0; }
-    .header-actions { display: flex; gap: 1rem; }
-    .secondary-btn { padding: 0.5rem 1rem; background: #ecf0f1; color: #2c3e50; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; }
-    .secondary-btn:hover { background: #bdc3c7; }
-    .logout-btn { padding: 0.5rem 1rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .table-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow-x: auto; }
+    styles: [`
+    .admin-container { padding: 2rem; max-width: 1200px; margin: 0 auto; font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; background: #fff; min-height: 100vh; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #f0f0f0; }
+    .header h1 { color: #111; margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
+    .header-actions { display: flex; gap: 0.75rem; }
+    .secondary-btn { padding: 0.5rem 1rem; background: #fff; color: #111; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; }
+    .secondary-btn:hover { border-color: #111; }
+    .logout-btn { padding: 0.5rem 1rem; background: #fff; color: #e74c3c; border: 1px solid #e74c3c; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+    .logout-btn:hover { background: #e74c3c; color: #fff; }
+    .table-container { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); overflow-x: auto; }
     .orders-table { width: 100%; border-collapse: collapse; }
-    .orders-table th, .orders-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
-    .orders-table th { background: #f8f9fa; color: #2c3e50; font-weight: 600; }
-    .text-right { text-align: right; font-weight: 600; }
-    .status-badge { padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+    .orders-table th, .orders-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #f5f5f5; font-size: 0.9rem; }
+    .orders-table th { background: #f6f6f6; color: #111; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .text-right { text-align: right; font-weight: 700; }
+    .status-badge { padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .status-pendente { background: #fff3cd; color: #856404; }
     .status-pago { background: #cce5ff; color: #004085; }
     .status-enviado { background: #e2d9f3; color: #5a3d8a; }
     .status-entregue { background: #d4edda; color: #155724; }
     .status-cancelado { background: #f8d7da; color: #721c24; }
-    .status-select { padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem; cursor: pointer; background: white; }
-    .status-select:focus { outline: none; border-color: #3498db; }
-    .loading, .empty { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; }
+    .status-select { padding: 0.5rem 0.75rem; border: 1.5px solid #e5e5e5; border-radius: 12px; font-size: 0.85rem; cursor: pointer; background: #fafafa; transition: border-color 0.2s; }
+    .status-select:focus { outline: none; border-color: #111; background: #fff; }
+    .loading, .empty { text-align: center; padding: 3rem; color: #999; font-size: 1rem; }
   `]
 })
 export class AdminOrdersComponent implements OnInit {

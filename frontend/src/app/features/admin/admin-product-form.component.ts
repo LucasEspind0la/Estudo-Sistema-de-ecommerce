@@ -93,26 +93,27 @@ import { AuthService } from '../../core/services/auth.service';
       <div *ngIf="loadingData" class="loading">Carregando dados...</div>
     </div>
   `,
-  styles: [`
-    .form-container { padding: 2rem; max-width: 800px; margin: 0 auto; font-family: 'Segoe UI', sans-serif; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
-    .header h1 { color: #2c3e50; margin: 0; font-size: 1.5rem; }
-    .secondary-btn { padding: 0.5rem 1rem; background: #ecf0f1; color: #2c3e50; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .product-form { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    styles: [`
+    .form-container { padding: 2rem; max-width: 800px; margin: 0 auto; font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; background: #fff; min-height: 100vh; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #f0f0f0; }
+    .header h1 { color: #111; margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+    .secondary-btn { padding: 0.5rem 1rem; background: #fff; color: #111; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; }
+    .secondary-btn:hover { border-color: #111; }
+    .product-form { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .form-group { margin-bottom: 1.5rem; }
-    label { display: block; margin-bottom: 0.5rem; color: #2c3e50; font-weight: 600; font-size: 0.9rem; }
-    input, textarea, select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
-    input:focus, textarea:focus, select:focus { outline: none; border-color: #3498db; }
-    .error-msg { color: #e74c3c; font-size: 0.8rem; margin-top: 0.25rem; }
-    .file-group input { padding: 0.5rem; background: #f8f9fa; }
-    .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
-    .primary-btn { padding: 0.75rem 2rem; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem; }
-    .primary-btn:hover:not(:disabled) { background: #219150; }
-    .primary-btn:disabled { background: #95a5a6; cursor: not-allowed; }
-    .alert { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; text-align: center; font-weight: 600; }
-    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    .loading { text-align: center; padding: 3rem; color: #7f8c8d; font-size: 1.1rem; }
+    label { display: block; margin-bottom: 0.5rem; color: #111; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, textarea, select { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid #e5e5e5; border-radius: 12px; font-size: 1rem; box-sizing: border-box; background: #fafafa; transition: border-color 0.2s, background 0.2s; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #111; background: #fff; }
+    .error-msg { color: #e74c3c; font-size: 0.8rem; margin-top: 0.3rem; font-weight: 600; }
+    .file-group input { padding: 0.6rem; background: #f6f6f6; border-radius: 12px; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 2rem; }
+    .primary-btn { padding: 0.85rem 2rem; background: #111; color: white; border: none; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 1rem; transition: background 0.2s, transform 0.15s; }
+    .primary-btn:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+    .primary-btn:disabled { background: #bbb; cursor: not-allowed; }
+    .alert { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; }
+    .error { background: #fdecea; color: #c0392b; border: 1px solid #f5c6cb; }
+    .loading { text-align: center; padding: 3rem; color: #999; font-size: 1rem; }
   `]
 })
 export class AdminProductFormComponent implements OnInit {
