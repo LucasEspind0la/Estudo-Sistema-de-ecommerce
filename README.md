@@ -145,7 +145,7 @@ admin@teste.com
 
 Cliente:
 	
-lucas@teste.com
+teste@teste.com
 	
 123456
 
