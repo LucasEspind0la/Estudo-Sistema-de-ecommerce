@@ -23,24 +23,28 @@ Sistema completo de e-commerce Full Stack, desenvolvido com **Spring Boot** (Bac
 <img src="docs/screenshots/login.png" alt="Tela de Login" width="800"/>
 </div>
 
-### 📊 Painel Administrativo (Dashboard)
-<div align="center">
-<img src="docs/screenshots/dashboard.png" alt="Dashboard Administrativo" width="800"/>
-</div>
-
-### 🛒 Carrinho de Compras
-<div align="center">
-<img src="docs/screenshots/carrinho.png" alt="Carrinho de Compras" width="800"/>
-</div>
 
 ### 🏪 Página Inicial da Loja
 <div align="center">
 <img src="docs/screenshots/pageInicial.png" alt="Página Inicial" width="800"/>
 </div>
 
+
 ### 🛍️ Catálogo de Produtos
 <div align="center">
 <img src="docs/screenshots/produtos.png" alt="Catálogo de Produtos" width="800"/>
+</div>
+
+
+### 📊 Painel Administrativo (Dashboard)
+<div align="center">
+<img src="docs/screenshots/dashboard.png" alt="Dashboard Administrativo" width="800"/>
+</div>
+
+
+### 🛒 Carrinho de Compras
+<div align="center">
+<img src="docs/screenshots/carrinho.png" alt="Carrinho de Compras" width="800"/>
 </div>
 
 ---
