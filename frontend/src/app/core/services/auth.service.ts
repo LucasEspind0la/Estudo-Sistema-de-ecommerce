@@ -1,61 +1,87 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
+
+export interface AuthResponse {
+  token: string;
+  email: string;
+  papel: string;
+}
 
 export interface LoginRequest {
   email: string;
   senha: string;
 }
 
-export interface LoginResponse {
-  token: string;
+export interface CadastroRequest {
+  nome: string;
   email: string;
+  senha: string;
   papel: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_KEY = 'auth_user';
+  private tokenKey = 'auth_token';
+  private userKey = 'auth_user';
+  
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/auth/login', credentials).pipe(
-      tap(response => {
-        localStorage.setItem(this.TOKEN_KEY, response.token);
-        localStorage.setItem(this.USER_KEY, JSON.stringify({
-          email: response.email,
-          papel: response.papel
-        }));
-      })
+  login(payload: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>('/api/auth/login', payload).pipe(
+      tap((res) => this.setSession(res))
+    );
+  }
+
+  /**
+   * Realiza o cadastro de um novo usuário.
+   * Por segurança, o papel é sempre definido como 'CLIENTE' no frontend.
+   */
+  register(payload: CadastroRequest): Observable<AuthResponse> {
+    // Força o papel para CLIENTE, impedindo que usuários se cadastrem como ADMIN
+    const payloadSeguro = { ...payload, papel: 'CLIENTE' };
+    
+    return this.http.post<AuthResponse>('/api/auth/cadastrar', payloadSeguro).pipe(
+      tap((res) => this.setSession(res))
     );
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    this.isAuthenticatedSubject.next(false);
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return localStorage.getItem(this.tokenKey);
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
-  }
-
-  getUserRole(): string | null {
-    const user = localStorage.getItem(this.USER_KEY);
-    if (user) {
-      return JSON.parse(user).papel;
-    }
-    return null;
+    return this.hasToken();
   }
 
   isAdmin(): boolean {
-    return this.getUserRole() === 'ADMINISTRADOR';
+    const user = this.getUser();
+    return user?.papel === 'ADMINISTRADOR';
+  }
+
+  getUser(): { email: string, papel: string } | null {
+    const userStr = localStorage.getItem(this.userKey);
+    return userStr ? JSON.parse(userStr) : null;
+  }
+
+  private setSession(authResult: AuthResponse): void {
+    localStorage.setItem(this.tokenKey, authResult.token);
+    localStorage.setItem(this.userKey, JSON.stringify({ email: authResult.email, papel: authResult.papel }));
+    this.isAuthenticatedSubject.next(true);
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem(this.tokenKey);
   }
 }
