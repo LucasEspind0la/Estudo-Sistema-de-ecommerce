@@ -5,6 +5,7 @@ import com.sualoja.api.dto.request.CreateProductRequest;
 import com.sualoja.api.model.entity.Category;
 import com.sualoja.api.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName; // <-- IMPORT ADICIONADO AQUI
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -114,5 +115,29 @@ public class ProductIntegrationTest {
                 .file(arquivoImagem))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.imagemUrl").exists());
+    }
+
+    // --- NOVOS TESTES ADICIONADOS PARA COBERTURA ---
+
+    @Test
+    @DisplayName("Deve retornar 401 Unauthorized ao tentar criar produto sem autenticação")
+    void deveRetornar401AoTentarCriarProdutoSemAutenticacao() throws Exception {
+        CreateProductRequest request = new CreateProductRequest(
+            "Produto Sem Token", "Descricao", categoria.getId(), true, true, List.of()
+        );
+
+        mockMvc.perform(post("/api/produtos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Deve listar produtos ativos com sucesso (Rota Pública)")
+    void deveListarProdutosAtivosComSucesso() throws Exception {
+        mockMvc.perform(get("/api/produtos/ativos")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
     }
 }
