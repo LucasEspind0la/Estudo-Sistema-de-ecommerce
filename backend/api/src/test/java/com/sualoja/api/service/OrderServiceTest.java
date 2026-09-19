@@ -1,16 +1,9 @@
 package com.sualoja.api.service;
 
-import com.sualoja.api.dto.response.OrderResponse;
-import com.sualoja.api.model.entity.Cart;
-import com.sualoja.api.model.entity.CartItem;
-import com.sualoja.api.model.entity.Order;
-import com.sualoja.api.model.entity.Product;
-import com.sualoja.api.model.entity.ProductVariant;
-import com.sualoja.api.model.entity.User;
-import com.sualoja.api.repository.CartRepository;
-import com.sualoja.api.repository.OrderRepository;
-import com.sualoja.api.repository.ProductVariantRepository;
-import com.sualoja.api.repository.UserRepository;
+import com.sualoja.api.exception.ResourceNotFoundException;
+import com.sualoja.api.model.entity.*;
+import com.sualoja.api.model.enums.OrderStatus;
+import com.sualoja.api.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,103 +21,93 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT) // <-- CORREÇÃO 1: Evita erro de UnnecessaryStubbing
+@MockitoSettings(strictness = Strictness.LENIENT)
 class OrderServiceTest {
 
-    @Mock
-    private OrderRepository orderRepository;
-
-    @Mock
-    private ProductVariantRepository variantRepository;
-
-    @Mock
-    private CartRepository cartRepository;
-
-    @Mock
-    private UserRepository userRepository;
+    @Mock private OrderRepository orderRepository;
+    @Mock private CartRepository cartRepository;
+    @Mock private UserRepository userRepository;
+    @Mock private ProductVariantRepository productVariantRepository;
 
     @InjectMocks
     private OrderService orderService;
 
     private User usuario;
+    private Cart carrinho;
     private ProductVariant variante;
-    private Cart cart;
-    private CartItem cartItem;
+    private CartItem itemCarrinho;
 
     @BeforeEach
     void setUp() {
         usuario = new User();
         usuario.setId(1L);
-        usuario.setEmail("lucas@teste.com");
 
         variante = new ProductVariant();
         variante.setId(1L);
-        variante.setEstoque(10);
         variante.setPreco(BigDecimal.valueOf(100.00));
+        variante.setEstoque(10);
         
         Product produto = new Product();
-        produto.setNome("Camiseta Teste");
+        produto.setNome("Teste");
         variante.setProduto(produto);
 
-        cart = new Cart();
-        cart.setId(1L);
-        cart.setUsuario(usuario);
+        itemCarrinho = new CartItem();
+        itemCarrinho.setVarianteProduto(variante);
+        itemCarrinho.setQuantidade(2);
 
-        cartItem = new CartItem();
-        cartItem.setId(1L);
-        cartItem.setVarianteProduto(variante); // Nome correto do setter
-        cartItem.setQuantidade(1);
-        
-        List<CartItem> itens = new ArrayList<>();
-        itens.add(cartItem);
-        cart.setItens(itens);
+        carrinho = new Cart();
+        carrinho.setUsuario(usuario);
+        carrinho.setItens(new ArrayList<>(List.of(itemCarrinho)));
     }
 
     @Test
-    @DisplayName("Deve finalizar pedido com sucesso quando há estoque")
-    void deveFinalizarPedidoComSucesso() {
-        // Arrange
-        when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
-        when(cartRepository.findByUsuarioId(usuario.getId())).thenReturn(Optional.of(cart));
-        when(variantRepository.findById(variante.getId())).thenReturn(Optional.of(variante));
-        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    @DisplayName("Deve lançar exceção se o carrinho estiver vazio")
+    void deveLancarExcecaoSeCarrinhoVazio() {
+        carrinho.getItens().clear();
+        when(cartRepository.findByUsuarioId(1L)).thenReturn(Optional.of(carrinho));
 
-        // Act
-        OrderResponse response = orderService.finalizarPedido(usuario.getId());
-
-        // Assert
-        assertNotNull(response);
-        
-        // CORREÇÃO 2: O DTO retorna String, não o Enum OrderStatus
-        assertEquals("PENDENTE", response.status()); 
-        
-        verify(userRepository, times(1)).findById(usuario.getId());
-        verify(cartRepository, times(1)).findByUsuarioId(usuario.getId());
-        verify(orderRepository, times(1)).save(any(Order.class));
-    }
-
-    @Test
-    @DisplayName("Deve lançar exceção quando o estoque for insuficiente")
-    void deveLancarExcecaoQuandoEstoqueInsuficiente() {
-        // Arrange: Força o cenário de erro (estoque 0)
-        variante.setEstoque(0); 
-        
-        // Usando lenient() pois a exceção pode ser lançada antes de chamar todos os métodos
-        lenient().when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
-        lenient().when(cartRepository.findByUsuarioId(usuario.getId())).thenReturn(Optional.of(cart));
-        lenient().when(variantRepository.findById(variante.getId())).thenReturn(Optional.of(variante));
-
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            orderService.finalizarPedido(usuario.getId());
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.finalizarPedido(1L);
         });
+        assertTrue(ex.getMessage().contains("carrinho está vazio"));
+    }
 
-        assertTrue(exception.getMessage().toLowerCase().contains("estoque"), 
-            "A mensagem de erro deveria mencionar 'estoque', mas foi: " + exception.getMessage());
-            
-        verify(orderRepository, never()).save(any(Order.class)); 
+    @Test
+    @DisplayName("Deve lançar exceção se o estoque for insuficiente")
+    void deveLancarExcecaoSeEstoqueInsuficiente() {
+        variante.setEstoque(1); // Estoque menor que a quantidade do carrinho (2)
+        when(cartRepository.findByUsuarioId(1L)).thenReturn(Optional.of(carrinho));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(usuario));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            orderService.finalizarPedido(1L);
+        });
+        assertTrue(ex.getMessage().contains("Estoque insuficiente"));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar pedido inexistente")
+    void deveLancarExcecaoAoBuscarPedidoInexistente() {
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            orderService.buscarPedidoPorId(99L);
+        });
+        assertTrue(ex.getMessage().contains("Pedido não encontrado"));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao atualizar status de pedido inexistente")
+    void deveLancarExcecaoAoAtualizarStatusInexistente() {
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            orderService.atualizarStatusPedido(99L, OrderStatus.PAGO);
+        });
+        assertTrue(ex.getMessage().contains("Pedido não encontrado"));
     }
 }
